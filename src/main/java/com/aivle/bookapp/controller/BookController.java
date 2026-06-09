@@ -45,7 +45,7 @@ public class BookController {
     }
 
     // 4. 도서 부분 수정 (Update - Partial)
-    // 기능: Books 수정 (변경 필드만) | Method: PATCH | URL: /books/:id
+    // 기능: Books 수정 | Method: PATCH | URL: /books/:id
     @PatchMapping("/{id}")
     public ResponseEntity<BookResponseDto> updateBook(
             @PathVariable("id") Long id, 

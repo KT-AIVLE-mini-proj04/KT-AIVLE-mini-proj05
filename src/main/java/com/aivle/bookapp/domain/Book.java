@@ -14,19 +14,15 @@ public class Book {
 
     private String title;       // 책 제목
     private String author;      // 저자
-    private String publisher;   // 출판사
-    private Integer price;      // 가격
 
     // 기본 생성자 (JPA 사용 시 필수)
     public Book() {
     }
 
     // 데이터 세팅을 위한 생성자
-    public Book(String title, String author, String publisher, Integer price) {
+    public Book(String title, String author) {
         this.title = title;
         this.author = author;
-        this.publisher = publisher;
-        this.price = price;
     }
 
     // --- Getter 및 Setter ---
@@ -38,10 +34,4 @@ public class Book {
 
     public String getAuthor() { return author; }
     public void setAuthor(String author) { this.author = author; }
-
-    public String getPublisher() { return publisher; }
-    public void setPublisher(String publisher) { this.publisher = publisher; }
-
-    public Integer getPrice() { return price; }
-    public void setPrice(Integer price) { this.price = price; }
 }
