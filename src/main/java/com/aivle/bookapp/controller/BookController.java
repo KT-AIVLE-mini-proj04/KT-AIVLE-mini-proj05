@@ -6,6 +6,7 @@ import com.aivle.bookapp.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -23,7 +24,8 @@ public class BookController {
     // 1. 도서 등록 (Create)
     // 기능: Books 등록 | Method: POST | URL: /books
     @PostMapping
-    public ResponseEntity<BookResponseDto> createBook(@RequestBody BookRequestDto requestDto) {
+    // 2. @Valid 추가: 프론트엔드에서 넘어온 데이터를 DB에 넣기 전에 DTO의 규칙(필수입력, 길이제한)대로 검사함
+    public ResponseEntity<BookResponseDto> createBook(@Valid @RequestBody BookRequestDto requestDto) {
         BookResponseDto responseDto = bookService.createBook(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
@@ -31,8 +33,11 @@ public class BookController {
     // 2. 도서 목록 조회 (Read - List)
     // 기능: Books 목록 조회 | Method: GET | URL: /books
     @GetMapping
-    public ResponseEntity<List<BookResponseDto>> getBookList() {
-        List<BookResponseDto> list = bookService.getBookList();
+    // 3. 헤더의 검색 바 기능을 위해 'keyword' 파라미터 추가
+    // @RequestParam(required = false)는 "검색어가 필수는 아니다(없으면 전체조회)"라는 뜻입니다.
+    public ResponseEntity<List<BookResponseDto>> getBookList(@RequestParam(required = false) String keyword) {
+    // 4. Service 쪽에 검색어가 있는지 없는지 같이 넘겨주도록 수정
+        List<BookResponseDto> list = bookService.getBookList(keyword);
         return ResponseEntity.ok().body(list);
     }
 
