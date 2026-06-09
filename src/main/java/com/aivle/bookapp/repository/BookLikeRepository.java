@@ -1,5 +1,6 @@
 package com.aivle.bookapp.repository;
 
+import com.aivle.bookapp.domain.Book;
 import com.aivle.bookapp.domain.BookLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,5 +14,7 @@ public class BookLikeRepository extends JpaRepository<BookLike, Long> {
     Optional<BookLike> findByUserAndBook(User user, Book book);
 
     // 좋아요 클릭 여부 확인
-    boolean existsByUserAndBook(User user, Book book)
+    boolean existsByUserAndBook(User user, Book book);
+
+    long countByBook(Book book);
 }

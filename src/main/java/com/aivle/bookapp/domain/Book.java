@@ -15,15 +15,15 @@ public class Book {
 
     private String title;
 
-    private int likeCount = 0;
-
-    public void increaseLikeCount() {
-        this.likeCount++;
-    }
-
-    public void decreaseLikeCount() {
-        if (this.likeCount > 0) {
-            this.likeCount--;
-        }
-    }
+//    private int likeCount = 0;
+//
+//    public void increaseLikeCount() {
+//        this.likeCount++;
+//    }
+//
+//    public void decreaseLikeCount() {
+//        if (this.likeCount > 0) {
+//            this.likeCount--;
+//        }
+//    }
 }
