@@ -38,6 +38,7 @@ public class AuthService {
 
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setAccessToken(accessToken);
+        loginResponseDto.setUsersId(existedUser.getUsersId());
         loginResponseDto.setLoginId(existedUser.getLoginId());
         loginResponseDto.setName(existedUser.getName());
         loginResponseDto.setGubun(existedUser.getGubun());
