@@ -51,5 +51,3 @@ public class EpisodeController {
         return ResponseEntity.ok(Map.of("message", "에피소드의 TTS가 등록되었습니다."));
     }
 }
-
-
