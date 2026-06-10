@@ -8,7 +8,7 @@ public class BookResponseDto {
     private String title;
     private String author;
     private String content;
-    private String coverImageData;
+    private String cover;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -18,7 +18,7 @@ public class BookResponseDto {
         this.title = book.getTitle();
         this.author = book.getAuthor();
         this.content = book.getDescription();
-        this.coverImageData = book.getCover();
+        this.cover = book.getCover();
         this.createdAt = book.getCreatedAt();
         this.updatedAt = book.getUpdatedAt();
     }
@@ -28,7 +28,7 @@ public class BookResponseDto {
     public String getTitle() { return title; }
     public String getAuthor() { return author; }
     public String getContent() { return content; }
-    public String getCoverImageData() { return coverImageData; }
+    public String getCover() { return cover; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
