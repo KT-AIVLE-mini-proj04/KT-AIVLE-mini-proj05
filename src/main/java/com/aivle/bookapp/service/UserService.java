@@ -4,6 +4,7 @@ import com.aivle.bookapp.domain.User;
 import com.aivle.bookapp.dto.UserResponseDto;
 import com.aivle.bookapp.dto.users.SignUpRequestDto;
 import com.aivle.bookapp.dto.users.SignUpResponseDto;
+import com.aivle.bookapp.global.util.BcryptPassword;
 import com.aivle.bookapp.global.util.Sha256Util;
 import com.aivle.bookapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class UserService {
         User newUser = new User();
 
         String passwordRaw = user.getPassword();
-        String passwordHash = Sha256Util.encrypt(passwordRaw);
+        String passwordHash = BcryptPassword.encrypt(passwordRaw);
         newUser.setPassword(passwordHash);
         newUser.setEmail(user.getEmail());
         newUser.setName(user.getName());

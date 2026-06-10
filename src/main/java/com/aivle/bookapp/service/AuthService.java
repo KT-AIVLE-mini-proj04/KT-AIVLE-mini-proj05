@@ -23,10 +23,8 @@ public class AuthService {
         String email = user.getEmail();
         String passwordRaw = user.getPassword();
 
-        String passwordHash = BcryptPassword.encrypt(passwordRaw);
-
         User existedUser = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("로그인을 실패했습니다."));
-        if (!existedUser.getPassword().equals(passwordHash)) {
+        if (!BcryptPassword.matches(passwordRaw, existedUser.getPassword())) {
             throw new RuntimeException("로그인을 실패했습니다.");
         }
 

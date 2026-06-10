@@ -11,7 +11,7 @@ public class BcryptPassword {
         return bCryptPasswordEncoder.encode(password);
     }
 
-    public boolean matches(String password, String hash) {
+    public static boolean matches(String password, String hash) {
         return bCryptPasswordEncoder.matches(password, hash);
     }
 }
