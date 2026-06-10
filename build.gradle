@@ -34,7 +34,7 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 
 	//security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('test') {

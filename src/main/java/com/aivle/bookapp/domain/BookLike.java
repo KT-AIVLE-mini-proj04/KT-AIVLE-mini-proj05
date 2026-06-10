@@ -10,14 +10,16 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "book_likes")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_likes_id")
     private Long id;
-
+//
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", nullable = false)
 //    private User user;
