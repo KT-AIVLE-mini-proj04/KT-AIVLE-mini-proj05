@@ -1,6 +1,6 @@
 package com.aivle.bookapp.service;
 
-import com.aivle.bookapp.domain.User;
+import com.aivle.bookapp.domain.Users;
 import com.aivle.bookapp.dto.UserResponseDto;
 import com.aivle.bookapp.dto.users.SignUpRequestDto;
 import com.aivle.bookapp.dto.users.SignUpResponseDto;
@@ -19,7 +19,7 @@ public class UserService {
         System.out.println(user.toString());
 
         // Request Body 내용으로 User 인스턴스 생성
-        User newUser = new User();
+        Users newUser = new Users();
 
         String passwordRaw = user.getPassword();
         String passwordHash = BcryptPassword.encrypt(passwordRaw);

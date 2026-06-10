@@ -44,6 +44,7 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	runtimeOnly 'org.postgresql:postgresql'
 }
  
 tasks.named('test') {
