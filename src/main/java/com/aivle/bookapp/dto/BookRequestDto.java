@@ -1,5 +1,10 @@
 package com.aivle.bookapp.dto;
 
-public class BookRequestDto {
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+public class BookRequestDto {
+    private String coverImageUrl;
 }
