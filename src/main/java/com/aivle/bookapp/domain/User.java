@@ -6,8 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,48 +18,40 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "`user`")
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @Column(name = "users_id")
+    private Integer usersId;
 
-    @NotBlank(message = "비밀번호는 필수입니다.")
-    @Column(name = "password", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "login_id", length = 255)
+    private String loginId;
+
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    @Email(message = "올바른 이메일 형식이 아닙니다.")
-    @NotBlank(message = "이메일은 필수입니다.")
-    @Column(name = "email", nullable = false, columnDefinition = "TEXT")
-    private String email;
-
-    @NotBlank(message = "이름은 필수입니다.")
-    @Column(name = "name", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "name", length = 20)
     private String name;
 
-    @Column(name = "address", columnDefinition = "TEXT")
+    @Column(name = "gubun")
+    private Integer gubun;
+
+    @Column(name = "email", length = 255)
+    private String email;
+
+    @Column(name = "address", length = 255)
     private String address;
 
-    @Column(name = "phone_number", columnDefinition = "TEXT")
+    @Column(name = "phone_number", length = 10)
     private String phoneNumber;
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public void updateUserInfo(String name, String address, String phoneNumber) {
-        this.name = name;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void changePassword(String password) {
-        this.password = password;
-    }
 }
