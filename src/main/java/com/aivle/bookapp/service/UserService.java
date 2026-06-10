@@ -5,7 +5,6 @@ import com.aivle.bookapp.dto.UserResponseDto;
 import com.aivle.bookapp.dto.users.SignUpRequestDto;
 import com.aivle.bookapp.dto.users.SignUpResponseDto;
 import com.aivle.bookapp.global.util.BcryptPassword;
-import com.aivle.bookapp.global.util.Sha256Util;
 import com.aivle.bookapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
