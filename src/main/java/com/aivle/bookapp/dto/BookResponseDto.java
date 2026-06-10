@@ -24,7 +24,7 @@ public class BookResponseDto {
     }
 
     // --- Getter --- (응답용이므로 보통 Getter만 사용합니다)
-    public Long getId() { return bookId; }
+    public Long getbookId() { return bookId; }
     public String getTitle() { return title; }
     public String getAuthor() { return author; }
     public String getDescription() { return description; }
