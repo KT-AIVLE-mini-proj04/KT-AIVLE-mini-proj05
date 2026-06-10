@@ -5,40 +5,50 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
-@Entity // 이 클래스가 데이터베이스의 테이블과 매칭됨을 알려주는 핵심 어노테이션
+@Entity 
+@Table(name = "book_info") // SQL의 book_info 테이블과 매칭
 public class Book {
 
-    @Id // 이 필드가 고유키(Primary Key)임을 나타냄
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID 값을 DB가 자동으로 1씩 증가시켜줌
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @Column(name = "book_id") // SQL의 book_id (PK)와 매칭
     private Long id;
 
-    private String title;       // 책 제목
-    private String author;      // 저자
+    // SQL의 users_id (FK)와 매칭. 당장 에러를 막기 위해 임시로 1번 유저로 세팅
+    @Column(name = "users_id", nullable = false)
+    private Long usersId = 1L;
 
-    // 1. 본문(내용)
-    @Column(columnDefinition = "TEXT") // 본문은 글자가 길어질 수 있으므로 TEXT 타입 지정
+    @Column(name = "title")
+    private String title;       
+
+    @Column(name = "author")
+    private String author;      
+
+    // SQL의 description 컬럼에 자바의 content 데이터를 넣음
+    @Column(name = "description", columnDefinition = "TEXT") 
     private String content;
 
-    // 2. AI 생성 표지 데이터 (Data URL 방식 저장)
-    @Column(columnDefinition = "TEXT") // 이미지 데이터 문자열이 매우 길기 때문에 TEXT로 지정
+    // SQL의 cover 컬럼에 자바의 coverImageData 데이터를 넣음
+    @Column(name = "cover", columnDefinition = "TEXT") 
     private String coverImageData;
 
-    // 3. 등록일 / 수정일
-    @CreationTimestamp // 데이터가 처음 저장될 때 시간 자동 기록
+    @CreationTimestamp 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp // 데이터가 수정될 때마다 시간 자동 갱신
+    @UpdateTimestamp 
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // 기본 생성자 (JPA 사용 시 필수)
-    public Book() {
-    }
+    // 기본 생성자
+    public Book() {}
 
-    // 4. 데이터 세팅을 위한 생성자 수정 (content 추가, 표지/시간은 나중에 세팅되므로 제외)
+    // 도서 등록용 생성자
     public Book(String title, String author, String content) {
         this.title = title;
         this.author = author;
@@ -48,6 +58,9 @@ public class Book {
     // --- Getter 및 Setter ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public Long getUsersId() { return usersId; }
+    public void setUsersId(Long usersId) { this.usersId = usersId; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -61,7 +74,6 @@ public class Book {
     public String getCoverImageData() { return coverImageData; }
     public void setCoverImageData(String coverImageData) { this.coverImageData = coverImageData; }
 
-    // (시간은 보통 변경할 일이 없어서 Getter만 둡니다)
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
