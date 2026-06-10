@@ -6,8 +6,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 
 @Entity 
@@ -17,9 +20,11 @@ public class Book {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     @Column(name = "book_id")
+    @JdbcTypeCode(SqlTypes.INTEGER)
     private Long bookId;
 
     @Column(name = "users_id", nullable = false)
+    @JdbcTypeCode(SqlTypes.INTEGER)
     private Long usersId = 1L;
 
     @Column(name = "title")
