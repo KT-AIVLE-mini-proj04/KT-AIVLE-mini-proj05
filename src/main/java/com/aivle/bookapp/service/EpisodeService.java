@@ -1,7 +1,7 @@
 package com.aivle.bookapp.service;
 
 import com.aivle.bookapp.domain.Episode;
-//import com.aivle.bookapp.exception.EpisodeNotFoundException;
+import com.aivle.bookapp.exception.EpisodeNotFoundException;
 import com.aivle.bookapp.repository.EpisodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -5,4 +5,3 @@ public class EpisodeNotFoundException extends RuntimeException {
         super("Episode with ID " + id + " not found.");
     }
 }
-
