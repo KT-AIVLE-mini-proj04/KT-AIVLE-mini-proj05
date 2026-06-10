@@ -1,3 +1,11 @@
 spring:
-  application:
-    name: bookapp
+  datasource:
+    url: aws-1-ap-northeast-2.pooler.supabase.com
+    username: postgres
+    password: aivle202609!@#
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
