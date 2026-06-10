@@ -17,7 +17,7 @@ public class BookRequestDto {
     @NotBlank(message = "본문 내용은 필수 입력 항목입니다.")
     private String description;
 
-    @NotNull(message = "작성자 ID는 필수 입력 항목입니다.")
+    @NotBlank(message = "작성자 ID는 필수 입력 항목입니다.")
     private Long usersId;
 
     // 기본 생성자
