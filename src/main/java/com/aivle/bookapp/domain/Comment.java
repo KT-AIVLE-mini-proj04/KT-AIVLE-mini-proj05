@@ -20,12 +20,7 @@ public class Comment {
     @Column(name = "book_id", nullable = false)
     private Long bookId;
 
-    // TODO: User 엔티티 완성 후 동작
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Column(name = "user_id", insertable = false, updatable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -41,15 +36,14 @@ public class Comment {
 
     protected Comment() {}
 
-    public Comment(Long bookId, User user, String content) {
+    public Comment(Long bookId, Long userId, String content) {
         this.bookId = bookId;
-        this.user = user;
+        this.userId = userId;
         this.content = content;
     }
 
     public String getCommentId() { return commentId; }
     public Long getBookId() { return bookId; }
-    public User getUser() { return user; }
     public Long getUserId() { return userId; }
     public String getContent() { return content; }
     public LocalDateTime getCreatedAt() { return createdAt; }
