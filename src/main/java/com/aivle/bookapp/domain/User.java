@@ -44,7 +44,7 @@ public class User {
     @Column(name = "address", length = 255)
     private String address;
 
-    @Column(name = "phone_number", length = 10)
+    @Column(name = "phone_number", length = 11)
     private String phoneNumber;
 
     @CreationTimestamp

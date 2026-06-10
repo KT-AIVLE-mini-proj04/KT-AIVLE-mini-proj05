@@ -6,8 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserResponseDto {
-    private String email;
+    private String loginId;
     private String name;
-    private String phone;
+    private Integer gubun;
+    private String email;
     private String address;
+    private String phoneNumber;
 }

@@ -5,7 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @RequiredArgsConstructor
 public class BcryptPassword {
-    private static final BCryptPasswordEncoder bCryptPasswordEncoder = null;
+    private static final BCryptPasswordEncoder bCryptPasswordEncoder =  new BCryptPasswordEncoder();
 
     public static String encrypt(String password) {
         return bCryptPasswordEncoder.encode(password);
