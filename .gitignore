@@ -35,7 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### ENV FILE, application.yaml ###
-.env
-src/main/resources/application.yaml
