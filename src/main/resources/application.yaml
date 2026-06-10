@@ -1,28 +1,23 @@
 spring:
   config:
     import:
-      # 나중에 보안을 위해 .env 파일로 비밀번호를 숨길 때 사용할 설정입니다.
       - optional:file:.env[.properties]
 
   application:
     name: bookapp
 
   datasource:
-    # 1. 완벽한 JDBC URL 형식 적용
-    url: jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres
-    # 2. 대표님의 정확한 Supabase ID 적용
-    username: postgres.unmnzpepqtjnjueqraky
-    # 3. 특수문자(#) 오류를 막기 위한 큰따옴표 적용
-    password: "aivle202609!@#"
+    url: aws-1-ap-northeast-2.pooler.supabase.com
+    username: postgres
+    password: aivle202609!@#
     driver-class-name: org.postgresql.Driver
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-
-# 새롭게 추가된 로그인/인증용 토큰 설정 (그대로 유지)
 jwt:
   secret: aivle-bookapp-jwt-secret-key-aivle-bookapp-jwt-secret-key-123456
   access-token-expiration-ms: 3600000
   refresh-token-expiration-ms: 25200000
+
+jpa:
+  hibernate:
+    ddl-auto: validate
+  show-sql: true
