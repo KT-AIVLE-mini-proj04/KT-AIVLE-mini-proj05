@@ -51,10 +51,11 @@ public class Book {
     public Book() {}
 
     // 도서 등록용 생성자
-    public Book(String title, String author, String description) {
+    public Book(String title, String author, String description, Long usersId) {
         this.title = title;
         this.author = author;
         this.description = description;
+        this.usersId = usersId;
     }
 
     // --- Getter 및 Setter ---
