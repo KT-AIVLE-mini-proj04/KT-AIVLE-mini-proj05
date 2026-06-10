@@ -1,6 +1,5 @@
 package com.aivle.bookapp.domain;
 
-import com.aivle.bookapp.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,7 +34,7 @@ public class Token {
             unique = true
     )
     @NotNull
-    private User user;
+    private Users user;
 
     @NotBlank(message = "토큰은 필수입니다.")
     @Column(name = "token", nullable = false, columnDefinition = "TEXT")

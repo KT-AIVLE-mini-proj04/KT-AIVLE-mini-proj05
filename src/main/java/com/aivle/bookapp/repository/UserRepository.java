@@ -1,13 +1,13 @@
 package com.aivle.bookapp.repository;
 
-import com.aivle.bookapp.domain.User;
+import com.aivle.bookapp.domain.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByLoginId(String loginId);
+public interface UserRepository extends JpaRepository<Users, Integer> {
+    Optional<Users> findByLoginId(String loginId);
     boolean existsByEmail(String email);
 }
