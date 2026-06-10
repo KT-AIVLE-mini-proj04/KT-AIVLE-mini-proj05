@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 
 public class CommentResponse {
 
-    private String commentId;
-    private Long bookId;
-    private Long userId;
+    private Integer commentsId;
+    private Integer bookId;
+    private Integer usersId;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -17,18 +17,18 @@ public class CommentResponse {
 
     public static CommentResponse from(Comment comment) {
         CommentResponse response = new CommentResponse();
-        response.commentId = comment.getCommentId();
+        response.commentsId = comment.getCommentsId();
         response.bookId = comment.getBookId();
-        response.userId = comment.getUserId();
+        response.usersId = comment.getUsersId();
         response.content = comment.getContent();
         response.createdAt = comment.getCreatedAt();
         response.updatedAt = comment.getUpdatedAt();
         return response;
     }
 
-    public String getCommentId() { return commentId; }
-    public Long getBookId() { return bookId; }
-    public Long getUserId() { return userId; }
+    public Integer getCommentsId() { return commentsId; }
+    public Integer getBookId() { return bookId; }
+    public Integer getUsersId() { return usersId; }
     public String getContent() { return content; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

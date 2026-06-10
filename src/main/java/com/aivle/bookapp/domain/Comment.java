@@ -13,15 +13,15 @@ import java.time.LocalDateTime;
 public class Comment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "comment_id")
-    private String commentId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comments_id")
+    private Integer commentsId;
 
-    @Column(name = "book_id", nullable = false)
-    private Long bookId;
+    @Column(name = "episode_id", nullable = false)
+    private Integer bookId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "users_id", nullable = false)
+    private Integer usersId;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
@@ -36,15 +36,15 @@ public class Comment {
 
     protected Comment() {}
 
-    public Comment(Long bookId, Long userId, String content) {
+    public Comment(Integer bookId, Integer usersId, String content) {
         this.bookId = bookId;
-        this.userId = userId;
+        this.usersId = usersId;
         this.content = content;
     }
 
-    public String getCommentId() { return commentId; }
-    public Long getBookId() { return bookId; }
-    public Long getUserId() { return userId; }
+    public Integer getCommentsId() { return commentsId; }
+    public Integer getBookId() { return bookId; }
+    public Integer getUsersId() { return usersId; }
     public String getContent() { return content; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
@@ -53,7 +53,7 @@ public class Comment {
         this.content = content;
     }
 
-    public boolean isOwnedBy(Long requestUserId) {
-        return this.userId != null && this.userId.equals(requestUserId);
+    public boolean isOwnedBy(Integer requestUsersId) {
+        return this.usersId != null && this.usersId.equals(requestUsersId);
     }
 }

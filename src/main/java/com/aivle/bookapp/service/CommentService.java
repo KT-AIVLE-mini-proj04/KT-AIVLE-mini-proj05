@@ -5,13 +5,15 @@ import com.aivle.bookapp.dto.CommentCreateRequest;
 import com.aivle.bookapp.dto.CommentResponse;
 import com.aivle.bookapp.dto.CommentUpdateRequest;
 import com.aivle.bookapp.repository.CommentRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -23,43 +25,46 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponse createComment(Long userId, CommentCreateRequest request) {
-        Comment comment = new Comment(request.getBookId(), userId, request.getContent());
+    public CommentResponse createComment(Integer usersId, CommentCreateRequest request) {
+        Comment comment = new Comment(request.getBookId(), usersId, request.getContent());
         return CommentResponse.from(commentRepository.save(comment));
     }
 
     @Transactional
-    public CommentResponse updateComment(String commentId, Long userId, CommentUpdateRequest request) {
-        Comment comment = findCommentOrThrow(commentId);
-        checkOwnership(comment, userId);
+    public CommentResponse updateComment(Integer commentsId, Integer usersId, CommentUpdateRequest request) {
+        Comment comment = findCommentOrThrow(commentsId);
+        checkOwnership(comment, usersId);
         comment.updateContent(request.getContent());
         return CommentResponse.from(comment);
     }
 
     @Transactional
-    public void deleteComment(String commentId, Long userId) {
-        Comment comment = findCommentOrThrow(commentId);
-        checkOwnership(comment, userId);
+    public void deleteComment(Integer commentsId, Integer usersId) {
+        Comment comment = findCommentOrThrow(commentsId);
+        checkOwnership(comment, usersId);
         commentRepository.delete(comment);
     }
 
     @Transactional(readOnly = true)
-    public List<CommentResponse> getCommentsByBookId(Long bookId) {
-        return commentRepository.findAllByBookId(bookId).stream()
-            .map(CommentResponse::from)
-            .collect(Collectors.toList());
+    public List<CommentResponse> getCommentsByBookId(Integer bookId, Integer page) {
+        Pageable pageable = (page == null)
+                ? Pageable.unpaged()
+                : PageRequest.of(page, 10, Sort.by("createdAt").descending());
+        return commentRepository.findAllByBookId(bookId, pageable)
+                .map(CommentResponse::from)
+                .getContent();
     }
 
-    private Comment findCommentOrThrow(String commentId) {
-        return commentRepository.findById(commentId)
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다. id=" + commentId));
+    private Comment findCommentOrThrow(Integer commentsId) {
+        return commentRepository.findById(commentsId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다. id=" + commentsId));
     }
 
-    private void checkOwnership(Comment comment, Long userId) {
-        if (!comment.isOwnedBy(userId)) {
+    private void checkOwnership(Comment comment, Integer usersId) {
+        if (!comment.isOwnedBy(usersId)) {
             throw new ResponseStatusException(
-                HttpStatus.FORBIDDEN, "본인의 댓글만 수정/삭제할 수 있습니다.");
+                    HttpStatus.FORBIDDEN, "본인의 댓글만 수정/삭제할 수 있습니다.");
         }
     }
 }
