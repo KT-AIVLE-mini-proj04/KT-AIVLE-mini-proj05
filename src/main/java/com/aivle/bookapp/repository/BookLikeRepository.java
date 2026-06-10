@@ -8,13 +8,13 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public class BookLikeRepository extends JpaRepository<BookLike, Long> {
+public interface BookLikeRepository extends JpaRepository<BookLike, Long> {
 
     // 특정 유저, 도서 좋아요 조회
-    Optional<BookLike> findByUserAndBook(User user, Book book);
+    Optional<BookLike> findByBook(Book book); //User user,
 
     // 좋아요 클릭 여부 확인
-    boolean existsByUserAndBook(User user, Book book);
+//    boolean existsByUserAndBook(Book book); //User user,
 
     long countByBook(Book book);
 }

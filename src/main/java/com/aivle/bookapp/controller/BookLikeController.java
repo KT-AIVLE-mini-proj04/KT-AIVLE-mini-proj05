@@ -19,13 +19,14 @@ public class BookLikeController {
 
     @PostMapping("/{bookId}/likes")
     public ResponseEntity<BookLikeResponse> toggleLike(
-            @PathVariable Long bookId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+            @PathVariable Long bookId) {
+//            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         // SecurityContext에 저장된 현재 로그인 유저의 ID 추출
-        Long userId = userDetails.getUserId();
+//        Long userId = userDetails.getUserId();
 
-        BookLikeResponse response = bookLikeService.toggleLike(bookId, userId);
+        BookLikeResponse response = bookLikeService.toggleLike(bookId); // userId
 
         return ResponseEntity.ok(response);
+    }
     }

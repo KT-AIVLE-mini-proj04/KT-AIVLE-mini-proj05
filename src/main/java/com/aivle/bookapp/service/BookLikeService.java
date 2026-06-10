@@ -17,21 +17,21 @@ public class BookLikeService {
 
     private final BookLikeRepository bookLikeRepository;
     private final BookRepository bookRepository;
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
 
     /*
     게시물 좋아요
      */
     @Transactional
-    public BookLikeResponse toggleLike(Long bookId, Long userId) {
+    public BookLikeResponse toggleLike(Long bookId) { //, Long userId
         // 1. 도서 및 유저 검증
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 도서입니다."));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
         // 2. 좋아요 내역 조회
-        Optional<BookLike> existingLike = bookLikeRepository.findByUserAndBook(user, book);
+        Optional<BookLike> existingLike = bookLikeRepository.findByBook(book);
 
         boolean isLiked;
 
@@ -42,7 +42,7 @@ public class BookLikeService {
             isLiked = false;
         } else {
             // 존재하지 않으면 저장 (좋아요 추가)
-            bookLikeRepository.save(new BookLike(member, book));
+            bookLikeRepository.save(new BookLike(book)); //user
             isLiked = true;
         }
 

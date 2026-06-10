@@ -18,9 +18,9 @@ public class BookLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
@@ -34,8 +34,8 @@ public class BookLike {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public BookLike(User user, Book book) {
-        this.user = user;
+    public BookLike(Book book) { //User user,
+//        this.user = user;
         this.book = book;
     }
 }
