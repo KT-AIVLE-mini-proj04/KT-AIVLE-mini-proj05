@@ -29,7 +29,7 @@ public class Token {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "user_id",
+            name = "users_id",
             nullable = false,
             unique = true
     )

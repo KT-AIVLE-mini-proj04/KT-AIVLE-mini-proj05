@@ -20,28 +20,30 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public LoginResponseDto login(LoginRequestDto user) {
-        String email = user.getEmail();
+        String loginId = user.getLoginId();
         String passwordRaw = user.getPassword();
 
-        User existedUser = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("로그인을 실패했습니다."));
+        User existedUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException("로그인을 실패했습니다."));
         if (!BcryptPassword.matches(passwordRaw, existedUser.getPassword())) {
             throw new RuntimeException("로그인을 실패했습니다.");
         }
 
-        String refreshToken = jwtTokenProvider.createRefreshToken(email);
+        String refreshToken = jwtTokenProvider.createRefreshToken(loginId);
         Token token = new Token();
         token.setUser(existedUser);
         token.setToken(refreshToken);
         tokenRepository.save(token);
 
-        String accessToken = jwtTokenProvider.createAccessToken(email);
+        String accessToken = jwtTokenProvider.createAccessToken(loginId);
 
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setAccessToken(accessToken);
-        loginResponseDto.setEmail(existedUser.getEmail());
+        loginResponseDto.setLoginId(existedUser.getLoginId());
         loginResponseDto.setName(existedUser.getName());
-        loginResponseDto.setPhone(existedUser.getPhoneNumber());
+        loginResponseDto.setGubun(existedUser.getGubun());
+        loginResponseDto.setEmail(existedUser.getEmail());
         loginResponseDto.setAddress(existedUser.getAddress());
+        loginResponseDto.setPhoneNumber(existedUser.getPhoneNumber());
 
         return loginResponseDto;
     }
