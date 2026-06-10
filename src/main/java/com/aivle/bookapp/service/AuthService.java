@@ -4,12 +4,13 @@ import com.aivle.bookapp.domain.Token;
 import com.aivle.bookapp.domain.User;
 import com.aivle.bookapp.dto.auth.LoginRequestDto;
 import com.aivle.bookapp.dto.auth.LoginResponseDto;
+import com.aivle.bookapp.global.util.BcryptPassword;
 import com.aivle.bookapp.global.util.JwtTokenProvider;
-import com.aivle.bookapp.global.util.Sha256Util;
 import com.aivle.bookapp.repository.TokenRepository;
 import com.aivle.bookapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 @RequiredArgsConstructor
@@ -22,11 +23,11 @@ public class AuthService {
         String email = user.getEmail();
         String passwordRaw = user.getPassword();
 
-        String passwordHash = Sha256Util.encrypt(passwordRaw);
+        String passwordHash = BcryptPassword.encrypt(passwordRaw);
 
-        User existedUser = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
-        if (existedUser.getPassword().equals(passwordHash)) {
-            throw new RuntimeException("비밀번호를 틀렸습니다.");
+        User existedUser = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("로그인을 실패했습니다."));
+        if (!existedUser.getPassword().equals(passwordHash)) {
+            throw new RuntimeException("로그인을 실패했습니다.");
         }
 
         String refreshToken = jwtTokenProvider.createRefreshToken(email);
