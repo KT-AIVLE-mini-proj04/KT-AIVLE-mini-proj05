@@ -14,11 +14,11 @@ public class BookResponseDto {
 
     // Entity(DB 데이터)를 DTO로 변환하는 생성자
     public BookResponseDto(Book book) {
-        this.id = book.getId();
+        this.id = book.getBookId();
         this.title = book.getTitle();
         this.author = book.getAuthor();
-        this.content = book.getContent();
-        this.coverImageData = book.getCoverImageData();
+        this.content = book.getDescription();
+        this.coverImageData = book.getCover();
         this.createdAt = book.getCreatedAt();
         this.updatedAt = book.getUpdatedAt();
     }
