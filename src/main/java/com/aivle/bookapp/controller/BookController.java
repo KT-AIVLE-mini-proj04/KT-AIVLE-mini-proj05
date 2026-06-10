@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/books")
 public class BookController {
 
     private final BookService bookService;
@@ -17,7 +17,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    // AI 표지 저장: PATCH /api/books/{id}/cover
+    // AI 표지 저장: PATCH /books/{id}/cover
     @PatchMapping("/{id}/cover")
     public ResponseEntity<BookResponseDto> updateCover(
             @PathVariable Long id,

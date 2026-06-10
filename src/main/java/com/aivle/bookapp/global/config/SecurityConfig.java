@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users", "/auth/login").permitAll()
-                        .requestMatchers("/api/books/**").permitAll() // TODO: 검증용 임시 허용 — JWT 필터 연결 후 제거
+                        .requestMatchers("/books/**").permitAll() // TODO: 검증용 임시 허용 — JWT 필터 연결 후 제거
                         .anyRequest().authenticated()
                 );
 
