@@ -26,7 +26,7 @@ public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "token_id")
-    private Long tokenId;
+    private Integer tokenId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
