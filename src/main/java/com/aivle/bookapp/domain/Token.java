@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -33,6 +34,7 @@ public class Token {
             nullable = false,
             unique = true
     )
+    @NotNull
     private User user;
 
     @NotBlank(message = "토큰은 필수입니다.")

@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -27,15 +28,19 @@ public class User {
     private Integer usersId;
 
     @Column(name = "login_id", length = 255)
+    @NotNull
     private String loginId;
 
     @Column(name = "password", nullable = false, length = 255)
+    @NotNull
     private String password;
 
     @Column(name = "name", length = 20)
+    @NotNull
     private String name;
 
     @Column(name = "gubun")
+    @NotNull
     private Integer gubun;
 
     @Column(name = "email", length = 255)
