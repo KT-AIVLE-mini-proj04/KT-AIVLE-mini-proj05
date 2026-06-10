@@ -17,7 +17,7 @@ public class BookRequestDto {
 
     // 1. 기획서 누락 필드 추가: 본문(내용) 및 필수 입력 검사 적용
     @NotBlank(message = "본문 내용은 필수 입력 항목입니다.")
-    private String content;
+    private String description;
 
     // 기본 생성자
     public BookRequestDto() {}
@@ -29,6 +29,6 @@ public class BookRequestDto {
     public String getAuthor() { return author; }
     public void setAuthor(String author) { this.author = author; }
 
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 }

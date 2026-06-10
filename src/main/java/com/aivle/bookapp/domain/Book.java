@@ -11,15 +11,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity 
-@Table(name = "book_info") // SQL의 book_info 테이블과 매칭
+@Table(name = "book_info")
 public class Book {
 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    @Column(name = "book_id") // SQL의 book_id (PK)와 매칭
-    private Long id;
+    @Column(name = "book_id")
+    private Long bookId;
 
-    // SQL의 users_id (FK)와 매칭. 당장 에러를 막기 위해 임시로 1번 유저로 세팅
     @Column(name = "users_id", nullable = false)
     private Long usersId = 1L;
 
@@ -29,13 +28,11 @@ public class Book {
     @Column(name = "author")
     private String author;      
 
-    // SQL의 description 컬럼에 자바의 content 데이터를 넣음
     @Column(name = "description", columnDefinition = "TEXT") 
-    private String content;
+    private String description;
 
-    // SQL의 cover 컬럼에 자바의 coverImageData 데이터를 넣음
     @Column(name = "cover", columnDefinition = "TEXT") 
-    private String coverImageData;
+    private String cover;
 
     @CreationTimestamp 
     @Column(name = "created_at")
@@ -49,15 +46,15 @@ public class Book {
     public Book() {}
 
     // 도서 등록용 생성자
-    public Book(String title, String author, String content) {
+    public Book(String title, String author, String description) {
         this.title = title;
         this.author = author;
-        this.content = content;
+        this.description = description;
     }
 
     // --- Getter 및 Setter ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getBookId() { return bookId; }
+    public void setBookId(Long bookId) { this.bookId = bookId; }
 
     public Long getUsersId() { return usersId; }
     public void setUsersId(Long usersId) { this.usersId = usersId; }
@@ -68,11 +65,11 @@ public class Book {
     public String getAuthor() { return author; }
     public void setAuthor(String author) { this.author = author; }
 
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getCoverImageData() { return coverImageData; }
-    public void setCoverImageData(String coverImageData) { this.coverImageData = coverImageData; }
+    public String getCover() { return cover; }
+    public void setCover(String cover) { this.cover = cover; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
