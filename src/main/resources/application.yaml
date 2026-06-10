@@ -1,3 +1,23 @@
 spring:
+  config:
+    import:
+      - optional:file:.env[.properties]
+
   application:
     name: bookapp
+
+  datasource:
+    url: aws-1-ap-northeast-2.pooler.supabase.com
+    username: postgres
+    password: aivle202609!@#
+    driver-class-name: org.postgresql.Driver
+
+jwt:
+  secret: aivle-bookapp-jwt-secret-key-aivle-bookapp-jwt-secret-key-123456
+  access-token-expiration-ms: 3600000
+  refresh-token-expiration-ms: 25200000
+
+jpa:
+  hibernate:
+    ddl-auto: update
+  show-sql: true
