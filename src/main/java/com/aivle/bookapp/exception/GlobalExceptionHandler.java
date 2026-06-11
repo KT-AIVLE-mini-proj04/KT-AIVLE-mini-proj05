@@ -37,6 +37,12 @@ public class GlobalExceptionHandler {
             .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), null));
     }
 
+    @ExceptionHandler(EpisodeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEpisodeNotFound(EpisodeNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), null));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneral(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
