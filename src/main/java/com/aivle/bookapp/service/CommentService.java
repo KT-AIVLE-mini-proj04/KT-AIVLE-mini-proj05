@@ -8,6 +8,7 @@ import com.aivle.bookapp.dto.CommentUpdateRequest;
 import com.aivle.bookapp.global.util.JwtTokenProvider;
 import com.aivle.bookapp.repository.CommentRepository;
 import com.aivle.bookapp.repository.UserRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -62,12 +63,22 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentResponse> getCommentsByBookId(Integer bookId, Integer page) {
-        Pageable pageable = (page == null)
-                ? Pageable.unpaged()
-                : PageRequest.of(page, 10, Sort.by("createdAt").descending());
-        return commentRepository.findAllByBookId(bookId, pageable)
-                .map(CommentResponse::from)
-                .getContent();
+        if (page != null && page < 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "page 값은 0 이상이어야 합니다.");
+        }
+        if (page == null) {
+            return commentRepository.findAllByBookId(bookId, Pageable.unpaged())
+                    .map(CommentResponse::from)
+                    .getContent();
+        }
+        Sort sort = Sort.by("createdAt").descending();
+        Page<Comment> result = commentRepository.findAllByBookId(bookId, PageRequest.of(page, 10, sort));
+        if (result.getTotalPages() > 0 && page >= result.getTotalPages()) {
+            int lastPage = result.getTotalPages() - 1;
+            result = commentRepository.findAllByBookId(bookId, PageRequest.of(lastPage, 10, sort));
+        }
+        return result.map(CommentResponse::from).getContent();
     }
 
     private Comment findCommentOrThrow(Integer commentsId) {
@@ -95,9 +106,16 @@ public class CommentService {
     }
 
     private String extractToken(String authorizationHeader) {
-        if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
+        if (authorizationHeader == null || authorizationHeader.isBlank()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization 헤더가 필요합니다.");
         }
-        return authorizationHeader.substring(BEARER_PREFIX.length());
+        if (!authorizationHeader.startsWith(BEARER_PREFIX)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Bearer 토큰 형식이 아닙니다.");
+        }
+        String token = authorizationHeader.substring(BEARER_PREFIX.length()).trim();
+        if (token.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰 값이 비어 있습니다.");
+        }
+        return token;
     }
 }
