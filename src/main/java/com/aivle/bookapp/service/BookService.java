@@ -115,4 +115,13 @@ public class BookService {
             throw new IllegalArgumentException("본문 내용은 필수 입력 항목입니다.");
         }
     }
+
+    // 6. AI 표지 이미지 URL 저장 (PATCH)
+    @Transactional
+    public BookResponseDto updateCover(Long id, String coverUrl) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 도서가 존재하지 않습니다. id=" + id));
+        book.setCover(coverUrl);
+        return new BookResponseDto(book);
+    }
 }

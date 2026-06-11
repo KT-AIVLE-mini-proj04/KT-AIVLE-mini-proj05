@@ -23,6 +23,10 @@ public class Comment {
     @Column(name = "users_id", nullable = false)
     private Integer usersId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "users_id", insertable = false, updatable = false)
+    private Users author;
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
@@ -45,6 +49,7 @@ public class Comment {
     public Integer getCommentsId() { return commentsId; }
     public Integer getBookId() { return bookId; }
     public Integer getUsersId() { return usersId; }
+    public Users getAuthor() { return author; }
     public String getContent() { return content; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

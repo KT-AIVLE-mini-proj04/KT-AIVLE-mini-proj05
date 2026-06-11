@@ -20,6 +20,7 @@ public class BookRequestDto {
 
     @NotNull(message = "작성자 ID는 필수 입력 항목입니다.")
     private Long usersId;
+    private String coverImageUrl;
 
     // 기본 생성자
     public BookRequestDto() {}
@@ -36,4 +37,6 @@ public class BookRequestDto {
 
     public Long getUsersId() { return usersId; }
     public void setUsersId(Long usersId) { this.usersId = usersId; }
+    public String getCoverImageUrl() { return coverImageUrl; }
+    public void setCoverImageUrl(String coverImageUrl) { this.coverImageUrl = coverImageUrl; }
 }

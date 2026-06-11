@@ -6,6 +6,7 @@ import com.aivle.bookapp.dto.CommentUpdateRequest;
 import com.aivle.bookapp.service.CommentService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,33 +21,33 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    // POST /comment  body: { "bookId": Integer, "content": String }
+    // POST /comment  Authorization: Bearer <token>  body: { "bookId": Integer, "content": String }
     @PostMapping
     public ResponseEntity<CommentResponse> createComment(
-            @RequestParam Integer usersId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
             @Valid @RequestBody CommentCreateRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(commentService.createComment(usersId, request));
+                .body(commentService.createComment(authorizationHeader, request));
     }
 
-    // PATCH /comment/{id}  body: { "content": String }
+    // PATCH /comment/{id}  Authorization: Bearer <token>  body: { "content": String }
     @PatchMapping("/{id}")
     public ResponseEntity<CommentResponse> updateComment(
             @PathVariable Integer id,
-            @RequestParam Integer usersId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
             @Valid @RequestBody CommentUpdateRequest request
     ) {
-        return ResponseEntity.ok(commentService.updateComment(id, usersId, request));
+        return ResponseEntity.ok(commentService.updateComment(id, authorizationHeader, request));
     }
 
-    // DELETE /comment/{id}
+    // DELETE /comment/{id}  Authorization: Bearer <token>
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable Integer id,
-            @RequestParam Integer usersId
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
-        commentService.deleteComment(id, usersId);
+        commentService.deleteComment(id, authorizationHeader);
         return ResponseEntity.noContent().build();
     }
 
