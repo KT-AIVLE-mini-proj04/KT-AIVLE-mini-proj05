@@ -1,6 +1,8 @@
 package com.aivle.bookapp.service;
 
 import com.aivle.bookapp.domain.Episode;
+import com.aivle.bookapp.dto.EpisodeRequestDto;
+import com.aivle.bookapp.dto.EpisodeUpdateRequest;
 import com.aivle.bookapp.exception.EpisodeNotFoundException;
 import com.aivle.bookapp.repository.EpisodeRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,21 +37,28 @@ public class EpisodeService {
     }
 
     @Transactional
-    public Episode create(Episode episode) {
+    public Episode create(EpisodeRequestDto dto) {
+        Episode episode = new Episode();
+        episode.setBookId(dto.getBookId());
+        episode.setUsersId(dto.getUsersId());
+        episode.setEpisodeTitle(dto.getEpisodeTitle());
+        episode.setEpisodeIndex(dto.getEpisodeIndex());
+        episode.setContent(dto.getContent());
+        episode.setView(0);
         return episodeRepository.save(episode);
     }
 
     @Transactional
-    public Episode update(Long id, Episode episode) {
+    public Episode update(Long id, EpisodeUpdateRequest dto) {
         Episode existing = findById(id);
-        if (episode.getEpisodeTitle() != null) {
-            existing.setEpisodeTitle(episode.getEpisodeTitle());
+        if (dto.getEpisodeTitle() != null) {
+            existing.setEpisodeTitle(dto.getEpisodeTitle());
         }
-        if (episode.getEpisodeIndex() != null) {
-            existing.setEpisodeIndex(episode.getEpisodeIndex());
+        if (dto.getEpisodeIndex() != null) {
+            existing.setEpisodeIndex(dto.getEpisodeIndex());
         }
-        if (episode.getContent() != null) {
-            existing.setContent(episode.getContent());
+        if (dto.getContent() != null) {
+            existing.setContent(dto.getContent());
         }
         return episodeRepository.save(existing);
     }

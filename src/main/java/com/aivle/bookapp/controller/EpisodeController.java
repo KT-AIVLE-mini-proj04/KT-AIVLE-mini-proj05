@@ -1,6 +1,8 @@
 package com.aivle.bookapp.controller;
 
-import com.aivle.bookapp.domain.Episode;
+import com.aivle.bookapp.dto.EpisodeRequestDto;
+import com.aivle.bookapp.dto.EpisodeResponseDto;
+import com.aivle.bookapp.dto.EpisodeUpdateRequest;
 import com.aivle.bookapp.service.EpisodeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +20,28 @@ public class EpisodeController {
     private final EpisodeService episodeService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Episode> getEpisode(@PathVariable Long id) {
-        return ResponseEntity.ok(episodeService.findById(id));
+    public ResponseEntity<EpisodeResponseDto> getEpisode(@PathVariable Long id) {
+        return ResponseEntity.ok(new EpisodeResponseDto(episodeService.findById(id)));
     }
 
     @GetMapping
-    public ResponseEntity<List<Episode>> getEpisodesByBookId(@RequestParam Long bookId) {
-        return ResponseEntity.ok(episodeService.findByBookId(bookId));
+    public ResponseEntity<List<EpisodeResponseDto>> getEpisodesByBookId(@RequestParam Long bookId) {
+        List<EpisodeResponseDto> responses = episodeService.findByBookId(bookId)
+                .stream()
+                .map(EpisodeResponseDto::new)
+                .toList();
+        return ResponseEntity.ok(responses);
     }
 
     @PostMapping
-    public ResponseEntity<Episode> createEpisode(@Valid @RequestBody Episode episode) {
-        Episode saved = episodeService.create(episode);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    public ResponseEntity<EpisodeResponseDto> createEpisode(@Valid @RequestBody EpisodeRequestDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new EpisodeResponseDto(episodeService.create(dto)));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Episode> updateEpisode(@PathVariable Long id, @RequestBody Episode episode) {
-        return ResponseEntity.ok(episodeService.update(id, episode));
+    public ResponseEntity<EpisodeResponseDto> updateEpisode(@PathVariable Long id, @RequestBody EpisodeUpdateRequest dto) {
+        return ResponseEntity.ok(new EpisodeResponseDto(episodeService.update(id, dto)));
     }
 
     @DeleteMapping("/{id}")
@@ -46,8 +52,7 @@ public class EpisodeController {
 
     @PostMapping("/{id}/tts")
     public ResponseEntity<Map<String, String>> updateTtsPath(@PathVariable Long id, @RequestBody Map<String, String> payload) {
-        String ttsPath = payload.get("ttsPath");
-        episodeService.updateTtsPath(id, ttsPath);
+        episodeService.updateTtsPath(id, payload.get("ttsPath"));
         return ResponseEntity.ok(Map.of("message", "에피소드의 TTS가 등록되었습니다."));
     }
 }
