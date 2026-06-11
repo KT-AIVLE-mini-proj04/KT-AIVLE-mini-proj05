@@ -2,6 +2,7 @@ package com.aivle.bookapp.dto;
 
 // 유효성 검사(필수 값, 길이 제한)를 위한 라이브러리 추가
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class BookRequestDto {
@@ -17,7 +18,7 @@ public class BookRequestDto {
     @NotBlank(message = "본문 내용은 필수 입력 항목입니다.")
     private String description;
 
-    @NotBlank(message = "작성자 ID는 필수 입력 항목입니다.")
+    @NotNull(message = "작성자 ID는 필수 입력 항목입니다.")
     private Long usersId;
 
     // 기본 생성자

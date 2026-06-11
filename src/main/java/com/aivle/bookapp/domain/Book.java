@@ -25,7 +25,7 @@ public class Book {
 
     @Column(name = "users_id", nullable = false)
     @JdbcTypeCode(SqlTypes.INTEGER)
-    private Long usersId = 1L;
+    private Long usersId;
 
     @Column(name = "title")
     private String title;       
