@@ -3,6 +3,7 @@ package com.aivle.bookapp.controller;
 import com.aivle.bookapp.dto.EpisodeRequestDto;
 import com.aivle.bookapp.dto.EpisodeResponseDto;
 import com.aivle.bookapp.dto.EpisodeUpdateRequest;
+import com.aivle.bookapp.dto.TtsUpdateRequest;
 import com.aivle.bookapp.service.EpisodeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -51,8 +53,8 @@ public class EpisodeController {
     }
 
     @PostMapping("/{id}/tts")
-    public ResponseEntity<Map<String, String>> updateTtsPath(@PathVariable Long id, @RequestBody Map<String, String> payload) {
-        episodeService.updateTtsPath(id, payload.get("ttsPath"));
+    public ResponseEntity<Map<String, String>> updateTtsPath(@PathVariable Long id, @Valid @RequestBody TtsUpdateRequest dto) {
+        episodeService.updateTtsPath(id, dto.getTtsPath());
         return ResponseEntity.ok(Map.of("message", "에피소드의 TTS가 등록되었습니다."));
     }
 }
