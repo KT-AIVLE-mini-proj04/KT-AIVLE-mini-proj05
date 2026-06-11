@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class BookResponseDto {
     private Long bookId;
-    private Long userId;
+    private Long usersId;
     private String title;
     private String author;
     private String description;
@@ -16,7 +16,7 @@ public class BookResponseDto {
     // Entity(DB 데이터)를 DTO로 변환하는 생성자
     public BookResponseDto(Book book) {
         this.bookId = book.getBookId();
-        this.userId = book.getUserId();
+        this.usersId = book.getUsersId();
         this.title = book.getTitle();
         this.author = book.getAuthor();
         this.description = book.getDescription();
@@ -27,7 +27,7 @@ public class BookResponseDto {
 
     // --- Getter --- (응답용이므로 보통 Getter만 사용합니다)
     public Long getBookId() { return bookId; }
-    public Long getUserId() { return userId; }
+    public Long getUsersId() { return usersId; }
     public String getTitle() { return title; }
     public String getAuthor() { return author; }
     public String getDescription() { return description; }
