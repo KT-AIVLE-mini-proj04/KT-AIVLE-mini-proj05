@@ -21,7 +21,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    show-sql: true
+    show-sql: false
 
 jwt:
   secret: aivle-bookapp-jwt-secret-key-aivle-bookapp-jwt-secret-key-123456
