@@ -48,7 +48,7 @@ public class JwtLoginFilter extends OncePerRequestFilter {
             String accessToken = jwtTokenProvider.createAccessToken(user.getLoginId());
             String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId());
 
-            Token savedToken = tokenRepository.findByUser_UsersId(user.getUsersId())
+            Token savedToken = tokenRepository.findByUsersId(user.getUsersId())
                     .orElseGet(Token::new);
             savedToken.setUser(user);
             savedToken.setToken(refreshToken);
