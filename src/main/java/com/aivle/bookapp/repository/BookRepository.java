@@ -8,7 +8,6 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    long findById(Book book);
     // 검색 기능용: 제목에 특정 단어(keyword)가 포함된 책들을 찾아오는 기능
     List<Book> findByTitleContaining(String keyword);
     // JpaRepository를 상속받기만 하면

@@ -5,8 +5,10 @@ import com.aivle.bookapp.domain.BookLike;
 import com.aivle.bookapp.dto.BookLikeResponse;
 import com.aivle.bookapp.repository.BookLikeRepository;
 import com.aivle.bookapp.repository.BookRepository;
+import com.aivle.bookapp.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import com.aivle.bookapp.domain.Users;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,21 +19,34 @@ public class BookLikeService {
 
     private final BookLikeRepository bookLikeRepository;
     private final BookRepository bookRepository;
-//    private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
+    /*현재 좋아요 개수 확인*/
+    @Transactional
+    public BookLikeResponse getLikeStatus(Long bookId, Integer usersId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 도서입니다."));
+
+        Users user = userRepository.findById(usersId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        boolean isLiked = bookLikeRepository.findByBookAndUser(book, user).isPresent();
+        long totalLikes = bookLikeRepository.countByBook(book);
+
+        return BookLikeResponse.of(isLiked, (int) totalLikes);
+    }
     /*
     게시물 좋아요
      */
     @Transactional
-    public BookLikeResponse toggleLike(Long bookId) { //, Long userId
+    public BookLikeResponse toggleLike(Long bookId, Integer usersId) {
         // 1. 도서 및 유저 검증
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 도서입니다."));
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-
+        Users user = userRepository.findById(usersId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         // 2. 좋아요 내역 조회
-        Optional<BookLike> existingLike = bookLikeRepository.findByBook(book);
+        Optional<BookLike> existingLike = bookLikeRepository.findByBookAndUser(book, user);
 
         boolean isLiked;
 
@@ -42,7 +57,7 @@ public class BookLikeService {
             isLiked = false;
         } else {
             // 존재하지 않으면 저장 (좋아요 추가)
-            bookLikeRepository.save(new BookLike(book)); //user
+            bookLikeRepository.save(new BookLike(book,user)); //user
             isLiked = true;
         }
 
