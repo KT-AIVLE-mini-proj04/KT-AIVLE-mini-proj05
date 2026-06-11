@@ -17,7 +17,7 @@ public class Comment {
     @Column(name = "comments_id")
     private Integer commentsId;
 
-    @Column(name = "episode_id", nullable = false)
+    @Column(name = "book_id", nullable = false)
     private Integer bookId;
 
     @Column(name = "users_id", nullable = false)
