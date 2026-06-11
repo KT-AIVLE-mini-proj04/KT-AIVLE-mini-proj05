@@ -1,4 +1,4 @@
-﻿package com.aivle.bookapp.dto;
+package com.aivle.bookapp.dto;
 
 // 유효성 검사(필수 값, 길이 제한)를 위한 라이브러리 추가
 import jakarta.validation.constraints.NotBlank;
