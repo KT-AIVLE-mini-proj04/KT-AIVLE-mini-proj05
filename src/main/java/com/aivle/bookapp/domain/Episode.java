@@ -35,7 +35,7 @@ public class Episode {
     private String episodeTitle;
 
     @Column
-    private int view = 0;
+    private Integer view = 0;
 
     @Column(nullable = false)
     private Integer episodeIndex;
