@@ -66,21 +66,16 @@ public class JwtTokenProvider {
     }
 
     public String getEmailFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        return getClaims(token).getSubject();
+    }
 
-        return claims.getSubject();
+    public String getTokenType(String token) {
+        return getClaims(token).get("tokenType", String.class);
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token);
+            getClaims(token);
 
             return true;
         } catch (ExpiredJwtException e) {
@@ -93,5 +88,13 @@ public class JwtTokenProvider {
             System.out.println("JWT 토큰이 비어 있거나 잘못되었습니다.");
             return false;
         }
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }
