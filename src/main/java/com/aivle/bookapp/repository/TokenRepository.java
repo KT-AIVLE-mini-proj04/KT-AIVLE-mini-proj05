@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface TokenRepository extends JpaRepository<Token, Integer> {
-    Optional<Token> findByUser_UsersId(Integer usersId);
+    Optional<Token> findFirstByUser_UsersIdOrderByTokenIdDesc(Integer usersId);
 }
