@@ -23,9 +23,9 @@ public class Book {
     @JdbcTypeCode(SqlTypes.INTEGER)
     private Long bookId;
 
-    @Column(name = "users_id", nullable = false)
+    @Column(name = "user_id", nullable = false)
     @JdbcTypeCode(SqlTypes.INTEGER)
-    private Long usersId;
+    private Long userId;
 
     @Column(name = "title")
     private String title;       
@@ -51,19 +51,19 @@ public class Book {
     public Book() {}
 
     // 도서 등록용 생성자
-    public Book(String title, String author, String description, Long usersId) {
+    public Book(String title, String author, String description, Long userId) {
         this.title = title;
         this.author = author;
         this.description = description;
-        this.usersId = usersId;
+        this.userId = userId;
     }
 
     // --- Getter 및 Setter ---
     public Long getBookId() { return bookId; }
     public void setBookId(Long bookId) { this.bookId = bookId; }
 
-    public Long getUsersId() { return usersId; }
-    public void setUsersId(Long usersId) { this.usersId = usersId; }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
