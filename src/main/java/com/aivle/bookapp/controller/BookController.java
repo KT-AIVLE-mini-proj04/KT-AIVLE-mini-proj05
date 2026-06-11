@@ -73,7 +73,7 @@ public class BookController {
     public ResponseEntity<BookResponseDto> updateCover(
             @PathVariable("id") Long id,
             @RequestBody BookRequestDto requestDto) {
-        BookResponseDto responseDto = bookService.updateCover(id, requestDto.getCover());
+        BookResponseDto responseDto = bookService.updateCover(id, requestDto.getCoverImageUrl());
         return ResponseEntity.ok().body(responseDto);
     }
 }
