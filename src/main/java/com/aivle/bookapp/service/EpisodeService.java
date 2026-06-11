@@ -24,7 +24,11 @@ public class EpisodeService {
 
     @Transactional(readOnly = true)
     public List<Episode> findByBookId(Long bookId) {
-        return episodeRepository.findByBookId(bookId);
+        List<Episode> episodes = episodeRepository.findByBookId(bookId);
+        if (episodes.isEmpty()) {
+            throw EpisodeNotFoundException.byBookId(bookId);
+        }
+        return episodes;
     }
 
     @Transactional
