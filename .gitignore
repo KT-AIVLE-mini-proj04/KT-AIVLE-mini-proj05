@@ -34,8 +34,12 @@ out/
 /.nb-gradle/
 
 ### VS Code ###
+<<<<<<< HEAD
 .vscode/
 
-### ENV FILE, application.yaml ###
-.env
+### Sensitive config ###
 src/main/resources/application.yaml
+.env
+=======
+.vscode/
+>>>>>>> main
