@@ -19,6 +19,8 @@ public class BookRequestDto {
     @NotBlank(message = "본문 내용은 필수 입력 항목입니다.")
     private String description;
 
+    private String coverImageUrl;
+
     // 기본 생성자
     public BookRequestDto() {}
 
@@ -31,4 +33,7 @@ public class BookRequestDto {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getCoverImageUrl() { return coverImageUrl; }
+    public void setCoverImageUrl(String coverImageUrl) { this.coverImageUrl = coverImageUrl; }
 }
