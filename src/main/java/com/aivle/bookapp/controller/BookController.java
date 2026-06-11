@@ -66,4 +66,14 @@ public class BookController {
         bookService.deleteBook(id);
         return ResponseEntity.ok().body("도서 ID " + id + "가 성공적으로 삭제되었습니다.");
     }
+
+    // 6. AI 표지 이미지 URL 저장 (Update - Cover)
+    // 기능: AI 생성 표지 URL 저장 | Method: PATCH | URL: /books/:id/cover
+    @PatchMapping("/{id}/cover")
+    public ResponseEntity<BookResponseDto> updateCover(
+            @PathVariable("id") Long id,
+            @RequestBody BookRequestDto requestDto) {
+        BookResponseDto responseDto = bookService.updateCover(id, requestDto.getCoverImageUrl());
+        return ResponseEntity.ok().body(responseDto);
+    }
 }

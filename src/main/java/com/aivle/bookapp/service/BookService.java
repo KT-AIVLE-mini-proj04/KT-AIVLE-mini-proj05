@@ -26,7 +26,8 @@ public class BookService {
         Book book = new Book(
             requestDto.getTitle(),
             requestDto.getAuthor(),
-            requestDto.getDescription() 
+            requestDto.getDescription(),
+            requestDto.getUsersId()
         );
         Book savedBook = bookRepository.save(book);
         return new BookResponseDto(savedBook);
@@ -79,5 +80,14 @@ public class BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 도서가 존재하지 않습니다. id=" + id));
         bookRepository.delete(book);
+    }
+
+    // 6. AI 표지 이미지 URL 저장 (PATCH)
+    @Transactional
+    public BookResponseDto updateCover(Long id, String coverUrl) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 도서가 존재하지 않습니다. id=" + id));
+        book.setCover(coverUrl);
+        return new BookResponseDto(book);
     }
 }

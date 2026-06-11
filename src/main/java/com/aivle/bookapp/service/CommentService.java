@@ -1,10 +1,14 @@
 package com.aivle.bookapp.service;
 
 import com.aivle.bookapp.domain.Comment;
+import com.aivle.bookapp.domain.Users;
 import com.aivle.bookapp.dto.CommentCreateRequest;
 import com.aivle.bookapp.dto.CommentResponse;
 import com.aivle.bookapp.dto.CommentUpdateRequest;
+import com.aivle.bookapp.global.util.JwtTokenProvider;
 import com.aivle.bookapp.repository.CommentRepository;
+import com.aivle.bookapp.repository.UserRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,41 +22,63 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class CommentService {
 
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(CommentRepository commentRepository,
+                          UserRepository userRepository,
+                          JwtTokenProvider jwtTokenProvider) {
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Transactional
-    public CommentResponse createComment(Integer usersId, CommentCreateRequest request) {
-        Comment comment = new Comment(request.getBookId(), usersId, request.getContent());
-        return CommentResponse.from(commentRepository.save(comment));
+    public CommentResponse createComment(String authorizationHeader, CommentCreateRequest request) {
+        Users user = resolveUser(authorizationHeader);
+        Comment comment = new Comment(request.getBookId(), user.getUsersId(), request.getContent());
+        Comment saved = commentRepository.save(comment);
+        return CommentResponse.from(saved, user);
     }
 
     @Transactional
-    public CommentResponse updateComment(Integer commentsId, Integer usersId, CommentUpdateRequest request) {
+    public CommentResponse updateComment(Integer commentsId, String authorizationHeader, CommentUpdateRequest request) {
+        Users user = resolveUser(authorizationHeader);
         Comment comment = findCommentOrThrow(commentsId);
-        checkOwnership(comment, usersId);
+        checkOwnership(comment, user.getUsersId());
         comment.updateContent(request.getContent());
-        return CommentResponse.from(comment);
+        return CommentResponse.from(comment, user);
     }
 
     @Transactional
-    public void deleteComment(Integer commentsId, Integer usersId) {
+    public void deleteComment(Integer commentsId, String authorizationHeader) {
+        Users user = resolveUser(authorizationHeader);
         Comment comment = findCommentOrThrow(commentsId);
-        checkOwnership(comment, usersId);
+        checkOwnership(comment, user.getUsersId());
         commentRepository.delete(comment);
     }
 
     @Transactional(readOnly = true)
     public List<CommentResponse> getCommentsByBookId(Integer bookId, Integer page) {
-        Pageable pageable = (page == null)
-                ? Pageable.unpaged()
-                : PageRequest.of(page, 10, Sort.by("createdAt").descending());
-        return commentRepository.findAllByBookId(bookId, pageable)
-                .map(CommentResponse::from)
-                .getContent();
+        if (page != null && page < 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "page 값은 0 이상이어야 합니다.");
+        }
+        if (page == null) {
+            return commentRepository.findAllByBookId(bookId, Pageable.unpaged())
+                    .map(CommentResponse::from)
+                    .getContent();
+        }
+        Sort sort = Sort.by("createdAt").descending();
+        Page<Comment> result = commentRepository.findAllByBookId(bookId, PageRequest.of(page, 10, sort));
+        if (result.getTotalPages() > 0 && page >= result.getTotalPages()) {
+            int lastPage = result.getTotalPages() - 1;
+            result = commentRepository.findAllByBookId(bookId, PageRequest.of(lastPage, 10, sort));
+        }
+        return result.map(CommentResponse::from).getContent();
     }
 
     private Comment findCommentOrThrow(Integer commentsId) {
@@ -66,5 +92,30 @@ public class CommentService {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN, "본인의 댓글만 수정/삭제할 수 있습니다.");
         }
+    }
+
+    private Users resolveUser(String authorizationHeader) {
+        String token = extractToken(authorizationHeader);
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다.");
+        }
+        String loginId = jwtTokenProvider.getEmailFromToken(token);
+        return userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED, "사용자를 찾을 수 없습니다."));
+    }
+
+    private String extractToken(String authorizationHeader) {
+        if (authorizationHeader == null || authorizationHeader.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization 헤더가 필요합니다.");
+        }
+        if (!authorizationHeader.startsWith(BEARER_PREFIX)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Bearer 토큰 형식이 아닙니다.");
+        }
+        String token = authorizationHeader.substring(BEARER_PREFIX.length()).trim();
+        if (token.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰 값이 비어 있습니다.");
+        }
+        return token;
     }
 }
