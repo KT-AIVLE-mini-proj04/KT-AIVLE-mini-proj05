@@ -35,6 +35,7 @@ public class JwtLoginFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+
         if (!"/auth/login".equals(request.getServletPath())
                 || !HttpMethod.POST.matches(request.getMethod())) {
             filterChain.doFilter(request, response);
@@ -48,7 +49,7 @@ public class JwtLoginFilter extends OncePerRequestFilter {
             String accessToken = jwtTokenProvider.createAccessToken(user.getLoginId());
             String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId());
 
-            Token savedToken = tokenRepository.findByUser_UsersId(user.getUsersId())
+            Token savedToken = tokenRepository.findFirstByUser_UsersIdOrderByTokenIdDesc(user.getUsersId())
                     .orElseGet(Token::new);
             savedToken.setUser(user);
             savedToken.setToken(refreshToken);
