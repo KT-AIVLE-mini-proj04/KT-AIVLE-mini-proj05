@@ -28,7 +28,7 @@ public class Episode {
 
     @NotNull
     @Column(nullable = false)
-    private Long userId;
+    private Long usersId;
 
     @Column(nullable = false)
     @NotBlank
