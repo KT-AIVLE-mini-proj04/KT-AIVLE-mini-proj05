@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
@@ -23,6 +25,7 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
             HttpServletResponse response,
             AuthenticationException exception
     ) throws IOException, ServletException {
-        securityErrorResponseWriter.write(response, HttpStatus.UNAUTHORIZED, "로그인을 실패했습니다.");
+        log.warn("Login authentication failed for path={} message={}", request.getServletPath(), exception.getMessage());
+        securityErrorResponseWriter.write(response, HttpStatus.BAD_REQUEST, "로그인을 실패했습니다.");
     }
 }

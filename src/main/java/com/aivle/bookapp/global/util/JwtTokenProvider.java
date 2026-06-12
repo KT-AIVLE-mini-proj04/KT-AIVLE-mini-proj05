@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 @Getter
@@ -37,13 +39,14 @@ public class JwtTokenProvider {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createAccessToken(String email) {
+    public String createAccessToken(String loginId, String sessionKey) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + accessTokenExpirationMs);
 
         return Jwts.builder()
-                .subject(email)
+                .subject(loginId)
                 .claim("tokenType", "ACCESS")
+                .claim("sessionKey", sessionKey)
                 .issuer(issuer)
                 .issuedAt(now)
                 .expiration(expiration)
@@ -71,6 +74,24 @@ public class JwtTokenProvider {
 
     public String getTokenType(String token) {
         return getClaims(token).get("tokenType", String.class);
+    }
+
+    public String getSessionKey(String token) {
+        return getClaims(token).get("sessionKey", String.class);
+    }
+
+    public String createTokenBindingValue(String refreshToken) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            byte[] digest = messageDigest.digest(refreshToken.getBytes(StandardCharsets.UTF_8));
+            StringBuilder builder = new StringBuilder();
+            for (byte value : digest) {
+                builder.append(String.format("%02x", value));
+            }
+            return builder.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 알고리즘을 사용할 수 없습니다.", e);
+        }
     }
 
     public boolean validateToken(String token) {
