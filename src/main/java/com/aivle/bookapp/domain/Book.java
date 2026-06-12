@@ -13,12 +13,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 
-@Entity 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
 @Table(name = "book_info")
 public class Book {
 
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
     @JdbcTypeCode(SqlTypes.INTEGER)
     private Long bookId;
@@ -28,25 +33,37 @@ public class Book {
     private Long usersId;
 
     @Column(name = "title")
-    private String title;       
+    private String title;
 
     @Column(name = "author")
-    private String author;      
+    private String author;
 
-    @Column(name = "description", columnDefinition = "TEXT") 
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "cover", columnDefinition = "TEXT") 
+    @Column(name = "cover", columnDefinition = "TEXT")
     private String cover;
 
-    @CreationTimestamp 
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+//    private String title;
 
+    //    private int likeCount = 0;
+//
+//    public void increaseLikeCount() {
+//        this.likeCount++;
+//    }
+//
+//    public void decreaseLikeCount() {
+//        if (this.likeCount > 0) {
+//            this.likeCount--;
+//        }
+//    }
     // 기본 생성자
     public Book() {}
 
@@ -58,25 +75,4 @@ public class Book {
         this.usersId = usersId;
     }
 
-    // --- Getter 및 Setter ---
-    public Long getBookId() { return bookId; }
-    public void setBookId(Long bookId) { this.bookId = bookId; }
-
-    public Long getUsersId() { return usersId; }
-    public void setUsersId(Long usersId) { this.usersId = usersId; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-
-    public String getAuthor() { return author; }
-    public void setAuthor(String author) { this.author = author; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public String getCover() { return cover; }
-    public void setCover(String cover) { this.cover = cover; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
