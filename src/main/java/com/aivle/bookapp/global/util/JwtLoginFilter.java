@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -26,12 +27,14 @@ import java.time.Duration;
 
 @RequiredArgsConstructor
 public class JwtLoginFilter extends OncePerRequestFilter {
+    private static final String LOGIN_FAILURE_MESSAGE = "로그인을 실패했습니다.";
 
     private final AuthenticationManager authenticationManager;
     private final JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler;
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenRepository tokenRepository;
     private final ObjectMapper objectMapper;
+    private final SecurityErrorResponseWriter securityErrorResponseWriter;
 
     @Override
     protected void doFilterInternal(
@@ -46,8 +49,20 @@ public class JwtLoginFilter extends OncePerRequestFilter {
             return;
         }
 
+        LoginRequestDto loginRequest;
         try {
-            LoginRequestDto loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequestDto.class);
+            loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequestDto.class);
+        } catch (Exception e) {
+            securityErrorResponseWriter.write(response, HttpStatus.BAD_REQUEST, LOGIN_FAILURE_MESSAGE);
+            return;
+        }
+
+        if (isBlank(loginRequest.getLoginId()) || isBlank(loginRequest.getPassword())) {
+            securityErrorResponseWriter.write(response, HttpStatus.BAD_REQUEST, LOGIN_FAILURE_MESSAGE);
+            return;
+        }
+
+        try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getLoginId(), loginRequest.getPassword())
             );
@@ -95,5 +110,9 @@ public class JwtLoginFilter extends OncePerRequestFilter {
         } catch (AuthenticationException e) {
             jwtAuthenticationFailureHandler.onAuthenticationFailure(request, response, e);
         }
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }

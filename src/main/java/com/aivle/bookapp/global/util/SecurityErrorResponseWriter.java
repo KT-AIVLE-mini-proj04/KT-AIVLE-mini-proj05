@@ -18,10 +18,14 @@ public class SecurityErrorResponseWriter {
     private final ObjectMapper objectMapper;
 
     public void write(HttpServletResponse response, HttpStatus status, String message) throws IOException {
+        write(response, status, message, null);
+    }
+
+    public void write(HttpServletResponse response, HttpStatus status, String message, Object details) throws IOException {
         response.setStatus(status.value());
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        objectMapper.writeValue(response.getWriter(), new ErrorResponse(status.value(), message, null));
+        objectMapper.writeValue(response.getWriter(), new ErrorResponse(status.value(), message, details));
     }
 
 }

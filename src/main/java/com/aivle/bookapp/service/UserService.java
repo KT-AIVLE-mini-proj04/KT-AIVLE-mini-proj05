@@ -7,18 +7,13 @@ import com.aivle.bookapp.global.util.BcryptPassword;
 import com.aivle.bookapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-    private static final String PHONE_NUMBER_REGEX = "^\\d{11}$";
-
     private final UserRepository userRepository;
 
     private Users setUser(SignUpRequestDto user) {
@@ -50,33 +45,13 @@ public class UserService {
     }
 
     private void invalidUserInfo(SignUpRequestDto user) {
-        // 1. 회원가입 요청폼 빈 값 확인
-        if (user.getLoginId() == null || user.getLoginId().isBlank() ||
-                user.getPassword() == null || user.getPassword().isBlank() ||
-                user.getName() == null || user.getName().isBlank() ||
-                user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new ResponseStatusException(BAD_REQUEST, "필수 회원 정보가 비어 있습니다.");
-        }
-
-        // 2. 기존 User들의 ID 비교
+        // DTO 검증은 컨트롤러의 @Valid에서 처리하고, 서비스는 비즈니스 검증만 담당한다.
         if (userRepository.existsByLoginId(user.getLoginId())){
             throw new ResponseStatusException(CONFLICT, "이미 사용 중인 아이디입니다.");
         }
-
-        // 3. 이메일 형식 검증
-        if (!user.getEmail().matches(EMAIL_REGEX)) {
-            throw new ResponseStatusException(BAD_REQUEST, "이메일 형식이 올바르지 않습니다.");
-        }
-
-        // 4. 전화번호 형식 검증: 값이 있을 때만 검사
-        if (user.getPhoneNumber() != null &&
-                !user.getPhoneNumber().isBlank() &&
-                !user.getPhoneNumber().matches(PHONE_NUMBER_REGEX)) {
-            throw new ResponseStatusException(BAD_REQUEST, "휴대폰 번호는 '-' 없이 숫자 11자리여야 합니다.");
-        }
     }
 
-    public UserResponseDto signup(@RequestBody SignUpRequestDto user) {
+    public UserResponseDto signup(SignUpRequestDto user) {
         // 회원가입 폼 유효성 검사
         invalidUserInfo(user);
 

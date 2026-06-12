@@ -73,14 +73,16 @@ public class SecurityConfig {
             JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler,
             JwtTokenProvider jwtTokenProvider,
             TokenRepository tokenRepository,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            SecurityErrorResponseWriter securityErrorResponseWriter
     ) {
         return new JwtLoginFilter(
                 authenticationManager,
                 jwtAuthenticationFailureHandler,
                 jwtTokenProvider,
                 tokenRepository,
-                objectMapper
+                objectMapper,
+                securityErrorResponseWriter
         );
     }
 
