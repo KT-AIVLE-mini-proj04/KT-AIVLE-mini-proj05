@@ -26,6 +26,6 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
             AuthenticationException exception
     ) throws IOException, ServletException {
         log.warn("Login authentication failed for path={} message={}", request.getServletPath(), exception.getMessage());
-        securityErrorResponseWriter.write(response, HttpStatus.UNAUTHORIZED, "로그인을 실패했습니다.");
+        securityErrorResponseWriter.write(response, HttpStatus.BAD_REQUEST, "로그인을 실패했습니다.");
     }
 }
