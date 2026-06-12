@@ -51,6 +51,9 @@ public class EpisodeService {
         if (episode.getContent() != null) {
             existing.setContent(episode.getContent());
         }
+        if (episode.getTtsPath() != null) {
+            existing.setTtsPath(episode.getTtsPath());
+        }
         return episodeRepository.save(existing);
     }
 
