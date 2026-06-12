@@ -26,7 +26,8 @@ public class BookService {
         Book book = new Book(
             requestDto.getTitle(),
             requestDto.getAuthor(),
-            requestDto.getDescription()
+            requestDto.getDescription(),
+            requestDto.getUsersId()
         );
         if (requestDto.getCover() != null) book.setCover(requestDto.getCover());
         Book savedBook = bookRepository.save(book);
