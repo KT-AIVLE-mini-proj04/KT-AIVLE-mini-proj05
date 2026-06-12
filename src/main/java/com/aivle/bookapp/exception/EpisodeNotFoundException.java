@@ -2,7 +2,7 @@ package com.aivle.bookapp.exception;
 
 public class EpisodeNotFoundException extends RuntimeException {
     public EpisodeNotFoundException(Long id) {
-        super("Episode with ID " + id + " not found.");
+        super("ID " + id + "에 해당하는 에피소드를 찾을 수 없습니다.");
     }
 
     public static EpisodeNotFoundException byBookId(Long bookId) {

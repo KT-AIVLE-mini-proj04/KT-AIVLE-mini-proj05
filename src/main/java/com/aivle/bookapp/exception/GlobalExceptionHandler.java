@@ -6,6 +6,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -41,6 +42,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleEpisodeNotFound(EpisodeNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), null));
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUsernameNotFound(UsernameNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage(), null));
     }
 
     @ExceptionHandler(Exception.class)
