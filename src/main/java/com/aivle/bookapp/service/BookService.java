@@ -29,6 +29,7 @@ public class BookService {
             requestDto.getDescription(),
             requestDto.getUsersId()
         );
+        if (requestDto.getCover() != null) book.setCover(requestDto.getCover());
         Book savedBook = bookRepository.save(book);
         return new BookResponseDto(savedBook);
     }
@@ -69,6 +70,7 @@ public class BookService {
         if (requestDto.getTitle() != null) book.setTitle(requestDto.getTitle());
         if (requestDto.getAuthor() != null) book.setAuthor(requestDto.getAuthor());
         if (requestDto.getDescription() != null) book.setDescription(requestDto.getDescription());
+        if (requestDto.getCover() != null) book.setCover(requestDto.getCover());
 
         // @Transactional 덕분에 save()를 명시적으로 호출하지 않아도 변경 사항이 DB에 자동 반영됩니다.
         return new BookResponseDto(book);
