@@ -4,7 +4,6 @@ import com.aivle.bookapp.domain.Token;
 import com.aivle.bookapp.repository.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,7 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
             return;
         }
 
-        String refreshToken = resolveRefreshToken(request);
+        String refreshToken = RefreshTokenCookieSupport.resolveRefreshToken(request);
         if (refreshToken == null || refreshToken.isBlank()) {
             securityErrorResponseWriter.write(
                     response,
@@ -90,20 +89,5 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         objectMapper.writeValue(response.getWriter(), Map.of("accessToken", accessToken));
-    }
-
-    private String resolveRefreshToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return null;
-        }
-
-        for (Cookie cookie : cookies) {
-            if (RefreshTokenCookieSupport.REFRESH_TOKEN_COOKIE_NAME.equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-
-        return null;
     }
 }
