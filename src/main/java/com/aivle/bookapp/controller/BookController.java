@@ -1,5 +1,6 @@
 package com.aivle.bookapp.controller;
 
+import com.aivle.bookapp.dto.BookCountResponseDto;
 import com.aivle.bookapp.dto.BookRequestDto;
 import com.aivle.bookapp.dto.BookResponseDto;
 import com.aivle.bookapp.service.BookService;
@@ -39,6 +40,12 @@ public class BookController {
     // 4. Service 쪽에 검색어가 있는지 없는지 같이 넘겨주도록 수정
         List<BookResponseDto> list = bookService.getBookList(keyword);
         return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<BookCountResponseDto> getBookCounts() {
+        BookCountResponseDto responseDto = bookService.getBookCounts();
+        return ResponseEntity.ok().body(responseDto);
     }
 
     // 3. 도서 상세 조회 (Read - Single)
