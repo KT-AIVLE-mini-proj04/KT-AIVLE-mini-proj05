@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +22,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 @RequiredArgsConstructor
 public class JwtLoginFilter extends OncePerRequestFilter {
@@ -51,7 +53,6 @@ public class JwtLoginFilter extends OncePerRequestFilter {
             );
             Users user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
 
-            String accessToken = jwtTokenProvider.createAccessToken(user.getLoginId());
             String refreshToken = jwtTokenProvider.createRefreshToken(user.getLoginId());
 
             Token savedToken = tokenRepository.findFirstByUser_UsersIdOrderByTokenIdDesc(user.getUsersId())
@@ -59,6 +60,23 @@ public class JwtLoginFilter extends OncePerRequestFilter {
             savedToken.setUser(user);
             savedToken.setToken(refreshToken);
             tokenRepository.save(savedToken);
+
+            String accessToken = jwtTokenProvider.createAccessToken(
+                    user.getLoginId(),
+                    jwtTokenProvider.createTokenBindingValue(refreshToken)
+            );
+
+            ResponseCookie refreshTokenCookie = ResponseCookie.from(
+                            RefreshTokenCookieSupport.REFRESH_TOKEN_COOKIE_NAME,
+                            refreshToken
+                    )
+                    .httpOnly(true)
+                    .secure(false)
+                    .path("/")
+                    .sameSite("Lax")
+                    .maxAge(Duration.ofMillis(jwtTokenProvider.getRefreshTokenExpirationMs()))
+                    .build();
+            response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
             LoginResponseDto loginResponse = new LoginResponseDto();
             loginResponse.setAccessToken(accessToken);

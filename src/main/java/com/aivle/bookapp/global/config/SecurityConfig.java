@@ -5,7 +5,9 @@ import com.aivle.bookapp.global.util.JwtAccessDeniedHandler;
 import com.aivle.bookapp.global.util.JwtAuthenticationEntryPoint;
 import com.aivle.bookapp.global.util.JwtAuthenticationFilter;
 import com.aivle.bookapp.global.util.JwtLoginFilter;
+import com.aivle.bookapp.global.util.JwtRefreshFilter;
 import com.aivle.bookapp.global.util.JwtTokenProvider;
+import com.aivle.bookapp.global.util.SecurityErrorResponseWriter;
 import com.aivle.bookapp.repository.TokenRepository;
 import com.aivle.bookapp.service.CustomUserDetailsService;
 import tools.jackson.databind.ObjectMapper;
@@ -40,17 +42,22 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtLoginFilter jwtLoginFilter) throws Exception {
+    public SecurityFilterChain filterChain(
+            HttpSecurity http,
+            JwtLoginFilter jwtLoginFilter,
+            JwtRefreshFilter jwtRefreshFilter
+    ) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/auth/login", "/users", "/error").permitAll()
+                        .requestMatchers("/", "/auth/login", "/auth/refresh", "/users", "/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtLoginFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtRefreshFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -74,6 +81,21 @@ public class SecurityConfig {
                 jwtTokenProvider,
                 tokenRepository,
                 objectMapper
+        );
+    }
+
+    @Bean
+    public JwtRefreshFilter jwtRefreshFilter(
+            JwtTokenProvider jwtTokenProvider,
+            TokenRepository tokenRepository,
+            ObjectMapper objectMapper,
+            SecurityErrorResponseWriter securityErrorResponseWriter
+    ) {
+        return new JwtRefreshFilter(
+                jwtTokenProvider,
+                tokenRepository,
+                objectMapper,
+                securityErrorResponseWriter
         );
     }
 
