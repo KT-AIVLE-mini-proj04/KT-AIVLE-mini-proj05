@@ -1,8 +1,10 @@
 package com.aivle.bookapp.service;
 
 import com.aivle.bookapp.domain.Book;
+import com.aivle.bookapp.dto.BookCountResponseDto;
 import com.aivle.bookapp.dto.BookRequestDto;
 import com.aivle.bookapp.dto.BookResponseDto;
+import com.aivle.bookapp.repository.BookLikeRepository;
 import com.aivle.bookapp.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +16,12 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final BookLikeRepository bookLikeRepository;
 
     // 의존성 주입 (Repository 연결)
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, BookLikeRepository bookLikeRepository) {
         this.bookRepository = bookRepository;
+        this.bookLikeRepository = bookLikeRepository;
     }
 
     // 1. 도서 등록 (POST)
@@ -50,6 +54,15 @@ public class BookService {
         return books.stream()
                 .map(BookResponseDto::new) // 각 Book 엔티티를 DTO로 변환
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public BookCountResponseDto getBookCounts() {
+        long totalBookCount = bookRepository.count();
+        long coverBookCount = bookRepository.countBooksWithCover();
+        long likedBookCount = bookLikeRepository.countDistinctBookIds();
+
+        return new BookCountResponseDto(totalBookCount, coverBookCount, likedBookCount);
     }
 
     // 3. 도서 상세 조회 (GET)
