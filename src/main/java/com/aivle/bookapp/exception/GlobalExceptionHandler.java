@@ -4,9 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -30,6 +32,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleResponseStatus(ResponseStatusException e) {
         return ResponseEntity.status(e.getStatusCode())
             .body(new ErrorResponse(e.getStatusCode().value(), e.getReason(), null));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleMissingParam(MissingServletRequestParameterException e) {
+        String message = "필수 파라미터가 누락되었습니다: " + e.getParameterName();
+        return ResponseEntity.badRequest()
+            .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), message, null));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        String message = "파라미터 타입이 올바르지 않습니다: " + e.getName();
+        return ResponseEntity.badRequest()
+            .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), message, null));
     }
 
     @ExceptionHandler(BookNotFoundException.class)
