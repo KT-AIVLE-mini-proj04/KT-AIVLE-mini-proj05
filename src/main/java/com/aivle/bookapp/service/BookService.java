@@ -33,7 +33,7 @@ public class BookService {
             requestDto.getDescription(),
             requestDto.getUsersId()
         );
-        if (requestDto.getCover() != null) book.setCover(requestDto.getCover());
+        book.setCover(requestDto.getCover()); 
         Book savedBook = bookRepository.save(book);
         return new BookResponseDto(savedBook);
     }

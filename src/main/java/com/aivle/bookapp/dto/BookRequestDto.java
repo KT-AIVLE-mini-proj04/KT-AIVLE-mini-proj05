@@ -20,7 +20,6 @@ public class BookRequestDto {
 
     @NotNull(message = "작성자 ID는 필수 입력 항목입니다.")
     private Long usersId;
-
     private String cover;
 
     // 기본 생성자
@@ -38,7 +37,7 @@ public class BookRequestDto {
 
     public Long getUsersId() { return usersId; }
     public void setUsersId(Long usersId) { this.usersId = usersId; }
-
+    
     public String getCover() { return cover; }
     public void setCover(String cover) { this.cover = cover; }
 }
