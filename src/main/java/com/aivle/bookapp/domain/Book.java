@@ -13,7 +13,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 
-@Entity 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
 @Table(name = "book_info")
 public class Book {
 
@@ -57,26 +62,4 @@ public class Book {
         this.description = description;
         this.usersId = usersId;
     }
-
-    // --- Getter 및 Setter ---
-    public Long getBookId() { return bookId; }
-    public void setBookId(Long bookId) { this.bookId = bookId; }
-
-    public Long getUsersId() { return usersId; }
-    public void setUsersId(Long usersId) { this.usersId = usersId; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-
-    public String getAuthor() { return author; }
-    public void setAuthor(String author) { this.author = author; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public String getCover() { return cover; }
-    public void setCover(String cover) { this.cover = cover; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
