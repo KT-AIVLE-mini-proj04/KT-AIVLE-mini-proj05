@@ -10,13 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -64,25 +62,9 @@ public class JwtRefreshFilter extends OncePerRequestFilter {
         }
 
         String loginId = jwtTokenProvider.getEmailFromToken(refreshToken);
-        String newRefreshToken = jwtTokenProvider.createRefreshToken(loginId);
-        savedToken.setToken(newRefreshToken);
-        tokenRepository.save(savedToken);
-
-        ResponseCookie refreshTokenCookie = ResponseCookie.from(
-                        RefreshTokenCookieSupport.REFRESH_TOKEN_COOKIE_NAME,
-                        newRefreshToken
-                )
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(Duration.ofMillis(jwtTokenProvider.getRefreshTokenExpirationMs()))
-                .build();
-        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
-
         String accessToken = jwtTokenProvider.createAccessToken(
                 loginId,
-                jwtTokenProvider.createTokenBindingValue(newRefreshToken)
+                jwtTokenProvider.createTokenBindingValue(refreshToken)
         );
 
         response.setStatus(HttpServletResponse.SC_OK);
