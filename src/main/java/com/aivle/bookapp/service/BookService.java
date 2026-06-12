@@ -4,8 +4,6 @@ import com.aivle.bookapp.domain.Book;
 import com.aivle.bookapp.dto.BookRequestDto;
 import com.aivle.bookapp.dto.BookResponseDto;
 import com.aivle.bookapp.repository.BookRepository;
-import com.aivle.bookapp.exception.BookNotFoundException; 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,29 +23,24 @@ public class BookService {
     // 1. 도서 등록 (POST)
     @Transactional
     public BookResponseDto createBook(BookRequestDto requestDto) {
-        // [수정] 입력 유효성 검사 (null 및 빈 문자열 검증)
-        validateBookData(requestDto.getTitle(), requestDto.getAuthor(), requestDto.getDescription());
-
         Book book = new Book(
             requestDto.getTitle(),
             requestDto.getAuthor(),
             requestDto.getDescription(),
             requestDto.getUsersId()
         );
-        
-        try {
-            Book savedBook = bookRepository.save(book);
-            return new BookResponseDto(savedBook);
-        } catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException("도서 저장 중 데이터베이스 오류가 발생했습니다. 입력값을 확인해주세요.", e);
-        }
+        book.setCover(requestDto.getCoverImageUrl()); 
+        Book savedBook = bookRepository.save(book);
+        return new BookResponseDto(savedBook);
     }
 
-    // 2. 도서 목록 조회 (GET) - 검색 기능
+    // 2. 도서 목록 조회 (GET) - 검색 기능 추가
     @Transactional(readOnly = true)
+    // Controller에서 넘겨준 검색어(keyword) 파라미터를 받음
     public List<BookResponseDto> getBookList(String keyword) {
         List<Book> books;
 
+    // 검색어가 비어있지 않다면 제목으로 검색, 없다면 기존처럼 전체 조회
         if (keyword != null && !keyword.trim().isEmpty()) {
             books = bookRepository.findByTitleContaining(keyword);
         } else {
@@ -55,7 +48,7 @@ public class BookService {
         }
 
         return books.stream()
-                .map(BookResponseDto::new)
+                .map(BookResponseDto::new) // 각 Book 엔티티를 DTO로 변환
                 .collect(Collectors.toList());
     }
 
@@ -63,30 +56,23 @@ public class BookService {
     @Transactional(readOnly = true)
     public BookResponseDto getBook(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(id));
+                .orElseThrow(() -> new IllegalArgumentException("해당 도서가 존재하지 않습니다. id=" + id));
         return new BookResponseDto(book);
     }
 
-    // 4. 도서 부분 수정 (PATCH)
+    // 4. 도서 부분 수정 (PATCH) - 명세서 핵심 요구사항
     @Transactional
     public BookResponseDto updateBook(Long id, BookRequestDto requestDto) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(id));
+                .orElseThrow(() -> new IllegalArgumentException("해당 도서가 존재하지 않습니다. id=" + id));
 
-        // [수정] 부분 수정 시 데이터 유효성 검증
-        if (requestDto.getTitle() != null) {
-            if (requestDto.getTitle().trim().isEmpty()) throw new IllegalArgumentException("제목을 빈칸으로 수정할 수 없습니다.");
-            book.setTitle(requestDto.getTitle());
-        }
-        if (requestDto.getAuthor() != null) {
-            if (requestDto.getAuthor().trim().isEmpty()) throw new IllegalArgumentException("저자를 빈칸으로 수정할 수 없습니다.");
-            book.setAuthor(requestDto.getAuthor());
-        }
-        if (requestDto.getDescription() != null) {
-            if (requestDto.getDescription().trim().isEmpty()) throw new IllegalArgumentException("본문 내용을 빈칸으로 수정할 수 없습니다.");
-            book.setDescription(requestDto.getDescription());
-        }
+        // 들어온 값이 null이 아닐 때만 기존 값을 변경 (부분 수정)
+        if (requestDto.getTitle() != null) book.setTitle(requestDto.getTitle());
+        if (requestDto.getAuthor() != null) book.setAuthor(requestDto.getAuthor());
+        if (requestDto.getDescription() != null) book.setDescription(requestDto.getDescription());
+        if (requestDto.getCoverImageUrl() != null) book.setCover(requestDto.getCoverImageUrl());
 
+        // @Transactional 덕분에 save()를 명시적으로 호출하지 않아도 변경 사항이 DB에 자동 반영됩니다.
         return new BookResponseDto(book);
     }
 
@@ -94,26 +80,8 @@ public class BookService {
     @Transactional
     public void deleteBook(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(id));
-        
-        try {
-            bookRepository.delete(book);
-        } catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException("해당 도서를 참조하고 있는 데이터가 있어 삭제할 수 없습니다.", e);
-        }
-    }
-
-    // --- 공통 검증 메서드 (Service 내부용) ---
-    private void validateBookData(String title, String author, String description) {
-        if (title == null || title.trim().isEmpty()) {
-            throw new IllegalArgumentException("도서 제목은 필수 입력 항목입니다.");
-        }
-        if (author == null || author.trim().isEmpty()) {
-            throw new IllegalArgumentException("저자는 필수 입력 항목입니다.");
-        }
-        if (description == null || description.trim().isEmpty()) {
-            throw new IllegalArgumentException("본문 내용은 필수 입력 항목입니다.");
-        }
+                .orElseThrow(() -> new IllegalArgumentException("해당 도서가 존재하지 않습니다. id=" + id));
+        bookRepository.delete(book);
     }
 
     // 6. AI 표지 이미지 URL 저장 (PATCH)
