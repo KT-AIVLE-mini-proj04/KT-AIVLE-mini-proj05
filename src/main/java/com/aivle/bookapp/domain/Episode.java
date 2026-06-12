@@ -44,7 +44,7 @@ public class Episode {
     @NotBlank
     private String content;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String ttsPath;
 
     @CreationTimestamp
