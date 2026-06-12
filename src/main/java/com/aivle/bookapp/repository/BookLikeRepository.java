@@ -4,6 +4,7 @@ import com.aivle.bookapp.domain.Book;
 import com.aivle.bookapp.domain.BookLike;
 import com.aivle.bookapp.domain.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -17,4 +18,7 @@ public interface BookLikeRepository extends JpaRepository<BookLike, Integer> {
 //    boolean existsByUserAndBook(Book book); //User user,
 
     long countByBook(Book book);
+
+    @Query("select count(distinct bl.book.bookId) from BookLike bl")
+    long countDistinctBookIds();
 }
