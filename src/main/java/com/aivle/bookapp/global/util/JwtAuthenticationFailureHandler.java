@@ -5,24 +5,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAccessDeniedHandler implements AccessDeniedHandler {
+public class JwtAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
     private final SecurityErrorResponseWriter securityErrorResponseWriter;
 
     @Override
-    public void handle(
+    public void onAuthenticationFailure(
             HttpServletRequest request,
             HttpServletResponse response,
-            AccessDeniedException accessDeniedException
+            AuthenticationException exception
     ) throws IOException, ServletException {
-        securityErrorResponseWriter.write(response, HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
+        securityErrorResponseWriter.write(response, HttpStatus.UNAUTHORIZED, "로그인을 실패했습니다.");
     }
 }
