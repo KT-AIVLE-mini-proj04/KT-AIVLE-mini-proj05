@@ -22,8 +22,8 @@ import lombok.Setter;
 @Table(name = "book_info")
 public class Book {
 
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
     @JdbcTypeCode(SqlTypes.INTEGER)
     private Long bookId;
@@ -33,25 +33,37 @@ public class Book {
     private Long usersId;
 
     @Column(name = "title")
-    private String title;       
+    private String title;
 
     @Column(name = "author")
-    private String author;      
+    private String author;
 
-    @Column(name = "description", columnDefinition = "TEXT") 
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "cover", columnDefinition = "TEXT") 
+    @Column(name = "cover", columnDefinition = "TEXT")
     private String cover;
 
-    @CreationTimestamp 
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+//    private String title;
 
+    //    private int likeCount = 0;
+//
+//    public void increaseLikeCount() {
+//        this.likeCount++;
+//    }
+//
+//    public void decreaseLikeCount() {
+//        if (this.likeCount > 0) {
+//            this.likeCount--;
+//        }
+//    }
     // 기본 생성자
     public Book() {}
 
@@ -62,4 +74,5 @@ public class Book {
         this.description = description;
         this.usersId = usersId;
     }
+
 }

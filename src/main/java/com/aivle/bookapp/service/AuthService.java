@@ -1,27 +1,39 @@
 package com.aivle.bookapp.service;
 
-import com.aivle.bookapp.domain.Users;
-import com.aivle.bookapp.dto.auth.LoginRequestDto;
-import com.aivle.bookapp.global.util.BcryptPassword;
-import com.aivle.bookapp.repository.UserRepository;
+import com.aivle.bookapp.domain.Token;
+import com.aivle.bookapp.global.util.JwtTokenProvider;
+import com.aivle.bookapp.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final UserRepository userRepository;
 
-    public Users authenticate(LoginRequestDto user) {
-        String loginId = user.getLoginId();
-        String passwordRaw = user.getPassword();
+    private final TokenRepository tokenRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
-        Users existedUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException("로그인을 실패했습니다."));
-        if (!BcryptPassword.matches(passwordRaw, existedUser.getPassword())) {
-            throw new RuntimeException("로그인을 실패했습니다.");
+    @Transactional
+    public void logout(String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw new ResponseStatusException(UNAUTHORIZED, "리프레시 토큰 쿠키가 없습니다.");
         }
 
-        return existedUser;
-    }
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new ResponseStatusException(UNAUTHORIZED, "유효하지 않거나 만료된 리프레시 토큰입니다.");
+        }
 
+        if (!"REFRESH".equals(jwtTokenProvider.getTokenType(refreshToken))) {
+            throw new ResponseStatusException(UNAUTHORIZED, "리프레시 토큰만 로그아웃에 사용할 수 있습니다.");
+        }
+
+        Token savedToken = tokenRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new ResponseStatusException(UNAUTHORIZED, "저장된 리프레시 토큰이 아닙니다."));
+
+        tokenRepository.delete(savedToken);
+    }
 }

@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+application.yaml
 
 ### STS ###
 .apt_generated
@@ -34,12 +35,4 @@ out/
 /.nb-gradle/
 
 ### VS Code ###
-<<<<<<< HEAD
 .vscode/
-
-### Sensitive config ###
-src/main/resources/application.yaml
-.env
-=======
-.vscode/
->>>>>>> main
