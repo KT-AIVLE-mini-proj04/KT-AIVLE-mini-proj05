@@ -3,7 +3,7 @@ version: 0.2
 env:
   shell: bash
   variables:
-    IMAGE_REPO_NAME: user105-back     # ← lms-backend 에서 변경
+    IMAGE_REPO_NAME: user105-back     # ← user105-back 에서 변경
     CONTAINER_NAME: backend
 
 phases:

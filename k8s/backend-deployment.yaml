@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lms-backend-deployment
+  name: user105-back-deployment
   namespace: default
 spec:
   replicas: 2
@@ -14,21 +14,21 @@ spec:
 
   selector:
     matchLabels:
-      app: lms-backend
+      app: user105-back
   template:
     metadata:
       labels:
-        app: lms-backend
+        app: user105-back
     spec:
       containers: # image aws_account_id: 변경사항 확인해보기
       - name: backend-container
-        image: 416225317325.dkr.ecr.us-east-1.amazonaws.com/lms-backend:latest
+        image: 416225317325.dkr.ecr.ap-southeast-2.amazonaws.com/user105-back:latest
 
         ports:
         - containerPort: 8080
 
         envFrom: # config와 secret name 확인해보기
         - configMapRef:
-            name: lms-backend-config
+            name: user105-back-config
         - secretRef:
-            name: lms-backend-secret
+            name: user105-back-secret

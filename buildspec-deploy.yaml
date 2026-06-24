@@ -13,7 +13,7 @@ phases:
     commands:
       # EKS 클러스터에 접속하기 위한 권한(kubeconfig) 설정
       - echo "EKS 클러스터 접속 정보 업데이트..."
-      - aws eks update-kubeconfig --region us-east-1 --name user126-cluster
+      - aws eks update-kubeconfig --region ap-southeast-2 --name user126-cluster
 
   build:
     commands:
@@ -28,7 +28,7 @@ phases:
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
 
       - # 주의: $REPOSITORY_URI 와 $IMAGE_TAG 는 CodePipeline 환경 변수로 전달받아야 합니다.
-      - sed -i "s|image: .*lms-backend:latest|image: 416225317325.dkr.ecr.us-east-1.amazonaws.com/lms-backend:$IMAGE_TAG|g" k8s/backend-deployment.yaml
+      - sed -i "s|image: .*user105-back:latest|image: 416225317325.dkr.ecr.ap-southeast-2.amazonaws.com/user105-back:$IMAGE_TAG|g" k8s/backend-deployment.yaml
 
       # 매니페스트 적용 (파드 생성/업데이트)
       - kubectl apply -f k8s/backend-config.yaml
@@ -40,4 +40,4 @@ phases:
     commands:
       # 롤링 업데이트가 무사히 완료되었는지 상태를 확인하고 배포 단계를 종료합니다.
       - echo "배포 상태 검증..."
-      - kubectl rollout status deployment/lms-backend-deployment
+      - kubectl rollout status deployment/user105-back-deployment

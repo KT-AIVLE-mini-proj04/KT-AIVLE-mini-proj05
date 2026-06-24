@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: lms-backend-config
+  name: user105-back-config
   namespace: default
 data:
   # Spring
   SPRING_APPLICATION_NAME: "bookapp"
   SERVER_PORT: "8080"
-  
+
   # DB
   SPRING_DATASOURCE_URL: "jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres"
   SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "1"
   SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
   SPRING_JPA_SHOW_SQL: "false"
   SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
-  
+
   # JWT
   JWT_ACCESS_TOKEN_EXPIRATION_MS: "3600000"
   JWT_REFRESH_TOKEN_EXPIRATION_MS: "25200000"
