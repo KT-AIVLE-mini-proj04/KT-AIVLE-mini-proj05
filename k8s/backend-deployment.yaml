@@ -5,13 +5,13 @@ metadata:
   namespace: default
 spec:
   replicas: 2
-  
+
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
-      
+
   selector:
     matchLabels:
       app: lms-backend
@@ -22,11 +22,11 @@ spec:
     spec:
       containers: # image aws_account_id: 변경사항 확인해보기
       - name: backend-container
-        image: 879772956301.dkr.ecr.us-east-1.amazonaws.com/lms-backend:latest
-   
+        image: 416225317325.dkr.ecr.us-east-1.amazonaws.com/lms-backend:latest
+
         ports:
         - containerPort: 8080
-        
+
         envFrom: # config와 secret name 확인해보기
         - configMapRef:
             name: lms-backend-config
